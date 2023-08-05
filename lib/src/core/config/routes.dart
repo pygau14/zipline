@@ -139,8 +139,7 @@ class AppRoutes {
           page: () => ForgotOTPEmailScreen(),
         );
       case newPass:
-        return GetPageRoute(
-            settings: settings, routeName: getNewPasswordRoute(), page: () => const NewPasswordScreen());
+        return GetPageRoute(settings: settings, routeName: getNewPasswordRoute(), page: () => NewPasswordScreen());
       case forgotPass:
         return GetPageRoute(
           settings: settings,
@@ -262,7 +261,7 @@ class AppRoutes {
         ),
         GetPage(
           name: newPass,
-          page: () => const NewPasswordScreen(),
+          page: () => NewPasswordScreen(),
           binding: NewPasswordBinding(),
         ),
         GetPage(

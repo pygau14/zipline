@@ -105,8 +105,8 @@ class AuthController extends GetxController {
       var jsonData = jsonDecode(data);
 
       if (response.statusCode == 200) {
-        String userId = jsonData[UserContants.userId].toString();
-        await prefs.setString(UserContants.userId, userId);
+        int userId = jsonData[UserContants.userId];
+        await prefs.setInt(UserContants.userId, userId);
         Fluttertoast.showToast(msg: "Registration Successful", timeInSecForIosWeb: 20);
         registerStatus.value = 'success';
         Get.offAllNamed(AppRoutes.home);

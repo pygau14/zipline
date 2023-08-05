@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:courier_app/src/core/config/routes.dart';
+import 'package:courier_app/src/core/constants/user_constants.dart';
+import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ForgotPassword2Controller extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -23,9 +28,46 @@ class ForgotPassword2Controller extends GetxController {
   String userPhone = '';
   String userEmail = '';
 
-  void setUserPhoneAndEmail(String phone, String email) {
+  Future<void> setUserPhoneAndEmail(String phone, String email) async {
+    isLoading.value = true;
     userPhone = phone;
     userEmail = email;
+    await prefs.setString(UserContants.userPhone, userPhone);
+    await prefs.setString(UserContants.userEmail, userEmail);
+    isLoading.value = false;
+  }
+
+  SharedPreferences prefs = PreferencesService.instance;
+
+  Future<void> setNewPassword(String password) async {
+    isLoading.value = true;
+    final url = Uri.parse('https://courier.hnktrecruitment.in/forgot-password');
+
+    try {
+      final response = await http.post(url,
+          body: jsonEncode({
+            // 'email': prefs.getString(UserContants.userEmail),
+            // 'mobile_number': prefs.getString(UserContants.userPhone),
+            'email': 'user223@gmail.com',
+            'mobile_number': '1234567891',
+            'password': password,
+            'confirm_password': password,
+          }),
+          headers: {'Content-Type': 'application/json'});
+      var data = response.body.toString();
+      var jsonData = jsonDecode(data);
+      if (response.statusCode == 200) {
+        int userId = jsonData[UserContants.userId];
+        await prefs.setInt(UserContants.userId, userId);
+        Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Fluttertoast.showToast(msg: jsonData['error'], timeInSecForIosWeb: 20);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString(), timeInSecForIosWeb: 20);
+    }
+    isLoading.value = false;
   }
 
   void startOtpResendTimer() {

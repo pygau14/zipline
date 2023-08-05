@@ -69,22 +69,20 @@ class ForgotPassword2Screen extends GetView<AuthController> {
               height: height_60,
               isDivider: false,
             ),
-            Obx(() =>
-            _forgotPassword2Controller.isLoading.isTrue
+            Obx(() => _forgotPassword2Controller.isLoading.isTrue
                 ? const Center(child: CircularProgressIndicator())
                 : CustomButton(
-              text: strGetOtp,
-              color: AppColors.white,
-              fontWeight: fontWeight800,
-              font: font_16,
-              onPress: () async {
-                String phone = Get.parameters['phone'].toString().trim();
-                String email = Get.parameters['email'].toString().trim();
-                _forgotPassword2Controller.setUserPhoneAndEmail(
-                    phone, email);
-                await _forgotPassword2Controller.sendPhoneOTP('+$phone');
-              },
-            )),
+                    text: strGetOtp,
+                    color: AppColors.white,
+                    fontWeight: fontWeight800,
+                    font: font_16,
+                    onPress: () async {
+                      String phone = Get.parameters['phone'].toString().trim();
+                      String email = Get.parameters['email'].toString().trim();
+                      await _forgotPassword2Controller.setUserPhoneAndEmail(phone, email);
+                      await _forgotPassword2Controller.sendPhoneOTP('+$phone');
+                    },
+                  )),
           ],
         ),
       ),

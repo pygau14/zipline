@@ -3,6 +3,7 @@ import 'package:courier_app/src/core/constants/palette.dart';
 import 'package:courier_app/src/core/constants/user_constants.dart';
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:courier_app/src/features/auth/login/login_bindings.dart';
+import 'package:courier_app/src/features/auth/new_password/new_password_binding.dart';
 import 'package:courier_app/src/features/auth/register/register_binding.dart';
 import 'package:courier_app/src/features/features/add_order/add_order_binding.dart';
 import 'package:courier_app/src/features/features/all_item/all_item_binding.dart';
@@ -68,10 +69,11 @@ class MyApp extends StatelessWidget {
             ),
             debugShowCheckedModeBanner: false,
             smartManagement: SmartManagement.full,
-            initialRoute:
-                prefs.getInt(UserContants.userId) == null ? AppRoutes.getLoginRoute() : AppRoutes.getLoginRoute(),
+            initialRoute: prefs.getInt(UserContants.userId) == null
+                ? AppRoutes.getAddOrderOneRoute()
+                : AppRoutes.getAddOrderOneRoute(),
             // !firstLogin ? AppRoutes.getLoginRoute() : AppRoutes.getIntroRoute(),
-            initialBinding: prefs.getInt(UserContants.userId) == null ? LoginBinding() : LoginBinding(),
+            initialBinding: prefs.getInt(UserContants.userId) == null ? AddOrderBinding() : AddOrderBinding(),
             // !firstLogin ? LoginBinding() : IntroBinding(),
             getPages: AppRoutes.getPages(),
             onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),
