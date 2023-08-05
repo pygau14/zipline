@@ -158,19 +158,20 @@ class AddOrderController extends GetxController {
   }
 
   Future<OrderSummaryModel?> getOrderSummary(String orderId) async {
-    isLoading.value = true;
+    // isLoading.value = true;
     OrderSummaryModel? orderSummary;
     final url = Uri.parse('https://courier.hnktrecruitment.in/order-summary/$orderId');
     try {
       final response = await http.get(url);
       final data = response.body.toString();
-      final jsonData = (data);
+      final jsonData = jsonDecode(data);
       if (response.statusCode == 200) {
         orderSummary = OrderSummaryModel.fromJson(jsonData);
       }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: 'An Error Occurred, Check your internet connection and try again!');
     }
+    // isLoading.value = false;
     return orderSummary;
   }
 }

@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
             smartManagement: SmartManagement.full,
             initialRoute: prefs.getInt(UserContants.userId) == null
                 ? AppRoutes.getAddOrderTwoRoute()
-                : AppRoutes.getAddOrderThreeRoute(),
+                : AppRoutes.getAddOrderFourRoute(),
             // !firstLogin ? AppRoutes.getLoginRoute() : AppRoutes.getIntroRoute(),
             initialBinding: prefs.getInt(UserContants.userId) == null ? AddOrderBinding() : AddOrderBinding(),
             // !firstLogin ? LoginBinding() : IntroBinding(),
