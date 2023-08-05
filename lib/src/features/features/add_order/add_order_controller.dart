@@ -20,10 +20,10 @@ class AddOrderController extends GetxController {
   // Step(title: 'title', content: Container())
   // ];
   final SharedPreferences prefs = PreferencesService.instance;
-  int orderId = -1;
 
-  Future<bool> addSenderDetails(String senderName, String contactNum, String emailAddress, String doorFlatNum,
+  Future<String> addSenderDetails(String senderName, String contactNum, String emailAddress, String doorFlatNum,
       String streetAreaName, String cityTown, String pincode) async {
+    String orderId = '';
     isLoading.value = true;
     bool isOrderAdded = false;
 
@@ -51,7 +51,7 @@ class AddOrderController extends GetxController {
 
       if (response.statusCode == 200) {
         isOrderAdded = true;
-        orderId = jsonData['orderId'];
+        orderId = jsonData['orderId'].toString();
         Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
       } else {
         isOrderAdded = false;
@@ -61,6 +61,49 @@ class AddOrderController extends GetxController {
       Fluttertoast.showToast(msg: 'Error: ${e.toString()}');
     }
     isLoading.value = false;
-    return isOrderAdded;
+    return orderId;
+  }
+
+  Future<String> addRecieverDetails(String orderId, String senderName, String contactNum, String emailAddress,
+      String doorFlatNum, String streetAreaName, String cityTown, String pincode) async {
+    String orderId = '';
+    isLoading.value = true;
+    bool isReceiverAdded = false;
+
+    final url = Uri.parse('https://courier.hnktrecruitment.in/add-order');
+    final body = jsonEncode({
+      'order_id': orderId,
+      'name': senderName,
+      'contact_no': contactNum,
+      'email_address': emailAddress,
+      'door_flat_no': doorFlatNum,
+      'street_area_name': streetAreaName,
+      'city_town': cityTown,
+      'pincode': pincode,
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      final data = response.body.toString();
+      final jsonData = jsonDecode(data);
+
+      if (response.statusCode == 200) {
+        isReceiverAdded = true;
+        orderId = jsonData['orderId'].toString();
+        Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
+      } else {
+        isReceiverAdded = false;
+        Fluttertoast.showToast(msg: jsonData['error'], timeInSecForIosWeb: 20);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: 'Error: ${e.toString()}', timeInSecForIosWeb: 20);
+    }
+    isLoading.value = false;
+    return orderId;
   }
 }

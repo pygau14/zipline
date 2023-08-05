@@ -38,7 +38,7 @@ class _AddOrderOneScreenState extends State<AddOrderOneScreen> {
 
   final AddOrderController addOrderController = Get.put(AddOrderController());
 
-  int _currentStep = 2;
+  int _currentStep = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -51,176 +51,188 @@ class _AddOrderOneScreenState extends State<AddOrderOneScreen> {
         color: AppColors.transparent,
       ),
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: margin_15),
-          children: [
-            Container(
-              width: double.infinity, //// Take full width of the screen
-              height: height_60,
-              decoration: BoxDecoration(
-                color: AppColors.transparent,
+        child: Form(
+          key: formKey,
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: margin_15),
+            children: [
+              Container(
+                width: double.infinity, //// Take full width of the screen
+                height: height_60,
+                decoration: BoxDecoration(
+                  color: AppColors.transparent,
+                ),
+                child: Stepper(
+                  currentStep: _currentStep,
+                  type: StepperType.horizontal,
+                  steps: [
+                    Step(
+                      title: Text(''),
+                      content: Text(''),
+                      isActive: _currentStep >= 0,
+                    ),
+                    Step(
+                      title: Text(''),
+                      content: Text(''),
+                      isActive: _currentStep >= 1,
+                    ),
+                    Step(
+                      title: Text(''),
+                      content: Text(''),
+                      isActive: _currentStep >= 2,
+                    ),
+                    Step(
+                      title: Text(''),
+                      content: Text(''),
+                      isActive: _currentStep >= 3,
+                    ),
+                  ],
+                  elevation: 0,
+                  onStepTapped: (index) {
+                    // setState(() {
+                    //   _currentStep = index;
+                    // });
+                  },
+                ),
               ),
-              child: Stepper(
-                currentStep: _currentStep,
-                type: StepperType.horizontal,
-                steps: [
-                  Step(
-                    title: Text(''),
-                    content: Text(''),
-                    isActive: _currentStep >= 0,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: Text(''),
-                    isActive: _currentStep >= 1,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: Text(''),
-                    isActive: _currentStep >= 2,
-                  ),
-                  Step(
-                    title: Text(''),
-                    content: Text(''),
-                    isActive: _currentStep >= 3,
-                  ),
-                ],
-                elevation: 0,
-                onStepTapped: (index) {
-                  setState(() {
-                    _currentStep = index;
-                  });
-                },
+
+              Align(
+                alignment: Alignment.topLeft,
+                child: CustomText(
+                    text: strSenderDetails, color1: AppColors.black, fontWeight: fontWeight700, fontSize: font_20),
               ),
-            ),
-
-            Align(
-              alignment: Alignment.topLeft,
-              child: CustomText(
-                  text: strSenderDetails, color1: AppColors.black, fontWeight: fontWeight700, fontSize: font_20),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: CustomText(
-                  text: strEnterDetBelow, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
-            ),
-
-            CustomDivider(
-              height: height_10,
-              isDivider: false,
-            ),
-            CustomTextField(
-              labelText: strEnterName,
-              prefixIcon: const Image(
-                image: AssetImage(ImgAssets.userIcon),
+              Align(
+                alignment: Alignment.topLeft,
+                child: CustomText(
+                    text: strEnterDetBelow, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
               ),
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              controller: nameController,
-              validator: ValidationBuilder().required().build(),
-            ), //user text-field
 
-            CustomTextField(
-              labelText: strMobNo,
-              prefixIcon: const Image(
-                image: AssetImage(ImgAssets.phoneIcon),
+              CustomDivider(
+                height: height_10,
+                isDivider: false,
               ),
-              obscure: false,
-              height: 0,
-              textInputType: TextInputType.number,
-              controller: phoneController,
-              validator: ValidationBuilder().required().build(),
-            ),
+              CustomTextField(
+                labelText: strEnterName,
+                prefixIcon: const Image(
+                  image: AssetImage(ImgAssets.userIcon),
+                ),
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                controller: nameController,
+                validator: ValidationBuilder().required().build(),
+              ), //user text-field
 
-            CustomTextField(
-              labelText: strEnterEmail,
-              prefixIcon: const Image(
-                image: AssetImage(ImgAssets.emailIcon),
+              CustomTextField(
+                labelText: strMobNo,
+                prefixIcon: const Image(
+                  image: AssetImage(ImgAssets.phoneIcon),
+                ),
+                obscure: false,
+                height: 0,
+                textInputType: TextInputType.number,
+                controller: phoneController,
+                validator: ValidationBuilder().required().build(),
               ),
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              controller: emailController,
-              validator: ValidationBuilder().required().build(),
-            ), //email text-field
 
-            CustomText(
-                text: strSenderAddress, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+              CustomTextField(
+                labelText: strEnterEmail,
+                prefixIcon: const Image(
+                  image: AssetImage(ImgAssets.emailIcon),
+                ),
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                controller: emailController,
+                validator: ValidationBuilder().required().build(),
+              ), //email text-field
 
-            CustomDivider(
-              height: height_10,
-              isDivider: false,
-            ),
+              CustomText(
+                  text: strSenderAddress, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
 
-            CustomTextField(
-              labelText: strDoorFlat,
-              prefixIcon: const Image(
-                image: AssetImage(ImgAssets.locationIcon),
+              CustomDivider(
+                height: height_10,
+                isDivider: false,
               ),
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              controller: doorFlatController,
-              validator: ValidationBuilder().required().build(),
-            ),
 
-            CustomTextField(
-              labelText: strStreetArea,
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              prefixIcon: null,
-              controller: streetAreaController,
-              validator: ValidationBuilder().required().build(),
-            ),
-            CustomTextField(
-              labelText: strCityTown,
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              prefixIcon: null,
-              controller: cityTownController,
-              validator: ValidationBuilder().required().build(),
-            ),
-            CustomTextField(
-              labelText: strPincode,
-              obscure: false,
-              height: height_15,
-              textInputType: TextInputType.text,
-              prefixIcon: null,
-              controller: pincodeController,
-              validator: ValidationBuilder().required().build(),
-            ),
-            CustomDivider(
-              height: height_25,
-              isDivider: false,
-            ),
-            CustomButton(
-              text: strContinue,
-              color: AppColors.white,
-              fontWeight: fontWeight800,
-              font: font_16,
-              onPress: () async {
-                bool isOrderAdded = await addOrderController.addSenderDetails(
-                    nameController.text,
-                    phoneController.text,
-                    emailController.text,
-                    doorFlatController.text,
-                    streetAreaController.text,
-                    cityTownController.text,
-                    pincodeController.text);
-                if (isOrderAdded) {
-                  Get.to(AppRoutes.addOrderTwo);
-                }
-              },
-            ),
+              CustomTextField(
+                labelText: strDoorFlat,
+                prefixIcon: const Image(
+                  image: AssetImage(ImgAssets.locationIcon),
+                ),
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                controller: doorFlatController,
+                validator: ValidationBuilder().required().build(),
+              ),
 
-            CustomDivider(
-              height: height_20,
-              isDivider: false,
-            ),
-          ],
+              CustomTextField(
+                labelText: strStreetArea,
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                prefixIcon: null,
+                controller: streetAreaController,
+                validator: ValidationBuilder().required().build(),
+              ),
+              CustomTextField(
+                labelText: strCityTown,
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                prefixIcon: null,
+                controller: cityTownController,
+                validator: ValidationBuilder().required().build(),
+              ),
+              CustomTextField(
+                labelText: strPincode,
+                obscure: false,
+                height: height_15,
+                textInputType: TextInputType.text,
+                prefixIcon: null,
+                controller: pincodeController,
+                validator: ValidationBuilder().required().build(),
+              ),
+              CustomDivider(
+                height: height_25,
+                isDivider: false,
+              ),
+              Obx(
+                () => addOrderController.isLoading.isTrue
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                        color: AppColors.orange,
+                      ))
+                    : CustomButton(
+                        text: strContinue,
+                        color: AppColors.white,
+                        fontWeight: fontWeight800,
+                        font: font_16,
+                        onPress: () async {
+                          if (formKey.currentState!.validate()) {
+                            String orderId = await addOrderController.addSenderDetails(
+                                nameController.text,
+                                phoneController.text,
+                                emailController.text,
+                                doorFlatController.text,
+                                streetAreaController.text,
+                                cityTownController.text,
+                                pincodeController.text);
+                            if (orderId.isNotEmpty) {
+                              Get.to('${AppRoutes.addOrderTwo}?orderId=$orderId');
+                            }
+                          }
+                        },
+                      ),
+              ),
+
+              CustomDivider(
+                height: height_20,
+                isDivider: false,
+              ),
+            ],
+          ),
         ),
       ),
     );
