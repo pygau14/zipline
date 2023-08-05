@@ -4,22 +4,32 @@ import 'package:courier_app/src/core/constants/user_constants.dart';
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constants/strings.dart';
 import 'package:http/http.dart' as http;
 
 class AddOrderController extends GetxController {
-  final List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
-  final List<String> dropdownCateg = ['Beam', 'Force', 'Clear'];
-  String? selectedValue = strSelectItemType;
-
-  RxBool isLoading = false.obs;
-
   // List<Steps> getStep => [
   // Step(title: 'title', content: Container())
   // ];
+  final List<String> itemTypes = ['Beam', 'Documents', 'Force', 'Clear'];
+  final List<String> itemCategories = ['Priority', 'Classified'];
+  String? selectedValue = strSelectItemType;
+
+  RxBool isLoading = false.obs;
   final SharedPreferences prefs = PreferencesService.instance;
+
+  RxString imagePath = ''.obs;
+
+  Future getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      imagePath.value = image.path.toString();
+    }
+  }
 
   Future<String> addSenderDetails(String senderName, String contactNum, String emailAddress, String doorFlatNum,
       String streetAreaName, String cityTown, String pincode) async {
@@ -51,7 +61,7 @@ class AddOrderController extends GetxController {
 
       if (response.statusCode == 200) {
         isOrderAdded = true;
-        orderId = jsonData['orderId'].toString();
+        orderId = jsonData['order_id'].toString();
         Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
       } else {
         isOrderAdded = false;
@@ -70,7 +80,7 @@ class AddOrderController extends GetxController {
     isLoading.value = true;
     bool isReceiverAdded = false;
 
-    final url = Uri.parse('https://courier.hnktrecruitment.in/add-order');
+    final url = Uri.parse('https://courier.hnktrecruitment.in/add-receiver-details');
     final body = jsonEncode({
       'order_id': orderId,
       'name': senderName,
@@ -94,7 +104,7 @@ class AddOrderController extends GetxController {
 
       if (response.statusCode == 200) {
         isReceiverAdded = true;
-        orderId = jsonData['orderId'].toString();
+        orderId = jsonData['order_id'].toString();
         Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
       } else {
         isReceiverAdded = false;
@@ -103,6 +113,45 @@ class AddOrderController extends GetxController {
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: 'Error: ${e.toString()}', timeInSecForIosWeb: 20);
     }
+    isLoading.value = false;
+    return orderId;
+  }
+
+  Future<String> addPackageDetails(String orderId, String itemName, String itemSize, String itemWeight, String itemType,
+      String itemCategory, String deliveryRequired, String itemImage, String charges) async {
+    isLoading.value = true;
+    bool isPackageAdded = false;
+    String orderId = '';
+    final url = Uri.parse('https://courier.hnktrecruitment.in/add-package-details');
+
+    try {
+      var request = http.MultipartRequest('POST', url);
+      request.fields['order_id'] = orderId;
+      request.fields['item_name'] = itemName;
+      request.fields['item_size'] = itemSize;
+      request.fields['item_weight'] = itemWeight;
+      request.fields['item_type'] = itemType;
+      request.fields['item_category'] = itemCategory;
+      request.fields['delivery_required'] = deliveryRequired;
+      request.fields['charges'] = charges;
+
+      request.files.add(await http.MultipartFile.fromPath('item_image', itemImage));
+
+      final response = await request.send();
+      var data = await response.stream.bytesToString();
+      var jsonData = jsonDecode(data);
+
+      if (response.statusCode == 200) {
+        orderId = jsonData['order_id'];
+        isPackageAdded = true;
+        Fluttertoast.showToast(msg: jsonData['message']);
+      } else {
+        Fluttertoast.showToast(msg: jsonData['error']);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: 'Error: ${e.toString()}');
+    }
+
     isLoading.value = false;
     return orderId;
   }
