@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e9500985-5b7a-4689-b9ef-218494176159" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/components/custom_radio.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/components/custom_radio.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/features/features/add_order/add_order3_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/features/add_order/add_order3_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/features/features/add_order/add_order_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/features/add_order/add_order_controller.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +42,6 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
     "io.flutter.reload.alreadyRun": "true",
     "last_opened_file_path": "D:/FlutterProjects/app/zipline-courier/Courier_frontend/lib/src/features/auth/auth/forgot_otp_mob",
     "settings.editor.selected.configurable": "editing.templates",

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:courier_app/src/core/constants/user_constants.dart';
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
+import 'package:courier_app/src/features/features/add_order/order_summary_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,7 +24,7 @@ class AddOrderController extends GetxController {
 
   RxString imagePath = ''.obs;
 
-  Future getImage() async {
+  Future<void> getImage() async {
     final ImagePicker _picker = ImagePicker();
     final image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -154,5 +155,22 @@ class AddOrderController extends GetxController {
 
     isLoading.value = false;
     return orderId;
+  }
+
+  Future<OrderSummaryModel?> getOrderSummary(String orderId) async {
+    isLoading.value = true;
+    OrderSummaryModel? orderSummary;
+    final url = Uri.parse('https://courier.hnktrecruitment.in/order-summary/$orderId');
+    try {
+      final response = await http.get(url);
+      final data = response.body.toString();
+      final jsonData = (data);
+      if (response.statusCode == 200) {
+        orderSummary = OrderSummaryModel.fromJson(jsonData);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: 'An Error Occurred, Check your internet connection and try again!');
+    }
+    return orderSummary;
   }
 }
