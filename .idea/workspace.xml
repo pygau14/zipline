@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e9500985-5b7a-4689-b9ef-218494176159" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/core/config/routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/core/config/routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/features/auth/auth/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/auth/auth/auth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/features/auth/forgot_password/forgot_password_binding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/auth/forgot_password/forgot_password_binding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/features/auth/forgot_password/forgot_password_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/auth/forgot_password/forgot_password_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/features/auth/otp_email/otp_email_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/auth/otp_email/otp_email_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/features/auth/otp_mob/otp_mobile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/features/auth/otp_mob/otp_mobile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2TYkVD3XesoxPAj5IiV2nmQG5Xz" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "io.flutter.reload.alreadyRun": "true",
+    "last_opened_file_path": "D:/FlutterProjects/app/zipline-courier/Courier_frontend/lib/src/features/auth/auth/forgot_otp_mob",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth\auth\forgot_otp_mob" />
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth\auth\forgot_otp_email" />
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth\forgot_password" />
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth\auth" />
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\core\config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth" />
+      <recent name="D:\FlutterProjects\app\zipline-courier\Courier_frontend\lib\src\features\auth\forgot_password2" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e9500985-5b7a-4689-b9ef-218494176159" name="Changes" comment="" />
+      <created>1691227425636</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1691227425636</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/main.dart</url>
+          <line>26</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
