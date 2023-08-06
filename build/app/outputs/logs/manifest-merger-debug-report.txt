@@ -71,6 +71,7 @@ MERGED from [:firebase_core] D:\FlutterProjects\app\zipline-courier\Courier_fron
 MERGED from [:file_picker] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\file_picker\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-19:12
 MERGED from [:image_picker_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-21:12
 MERGED from [:flutter_plugin_android_lifecycle] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
+MERGED from [:image_gallery_saver] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\image_gallery_saver\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:path_provider_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:smart_auth] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\smart_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:shared_preferences_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
@@ -165,6 +166,8 @@ MERGED from [:image_picker_android] D:\FlutterProjects\app\zipline-courier\Couri
 MERGED from [:image_picker_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\image_picker_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:flutter_plugin_android_lifecycle] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:flutter_plugin_android_lifecycle] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:image_gallery_saver] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\image_gallery_saver\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:image_gallery_saver] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\image_gallery_saver\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:path_provider_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:path_provider_android] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:smart_auth] D:\FlutterProjects\app\zipline-courier\Courier_frontend\build\smart_auth\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
