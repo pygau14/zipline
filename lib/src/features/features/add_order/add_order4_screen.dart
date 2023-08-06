@@ -1,14 +1,14 @@
 import 'package:courier_app/src/components/custom_about_package.dart';
 import 'package:courier_app/src/components/custom_appbar.dart';
 import 'package:courier_app/src/components/custom_container.dart';
+import 'package:courier_app/src/components/custom_list.dart';
+import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/core/constants/assets.dart';
 import 'package:courier_app/src/features/features/add_order/add_order_controller.dart';
 import 'package:courier_app/src/features/features/add_order/order_summary_model.dart';
 import 'package:courier_app/src/features/features/signature_pad/signature_pad_screen.dart';
-import 'package:courier_app/src/features/features/signature_pad/signature_reciever_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../components/custom_button.dart';
 import '../../../components/custom_divider.dart';
@@ -28,6 +28,7 @@ class AddOrderFourScreen extends StatefulWidget {
 
 class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
   final AddOrderController addOrderController = Get.put(AddOrderController());
+  TextEditingController itemCategoryController = TextEditingController();
 
   int _currentStep = 0;
 
@@ -35,7 +36,6 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
 
   @override
   void initState() {
-    addOrderController.getOrderSummary('11');
     super.initState();
   }
 
@@ -51,7 +51,7 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
       ),
       body: SafeArea(
         child: FutureBuilder(
-            future: addOrderController.getOrderSummary(Get.parameters['orderId'].toString()),
+            future: addOrderController.getOrderSummary(addOrderController.orderId),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -60,7 +60,18 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
                   ),
                 );
               } else if (snapshot.hasData) {
+                print('orderId 4 ${addOrderController.orderId}');
                 OrderSummaryModel orderSummary = snapshot.data;
+
+                String senderName = orderSummary.senderName.toString();
+                String receiverName = orderSummary.receiverName.toString();
+                String charges = orderSummary.charges.toString();
+                String deliveryRequired = orderSummary.deliveryRequired.toString() == '1' ? 'Yes' : 'No';
+                String itemType = orderSummary.type.toString();
+                String itemCategory = orderSummary.category.toString();
+                String weight = orderSummary.weight.toString();
+                String size = orderSummary.size.toString();
+
                 return ListView(
                   padding: EdgeInsets.symmetric(horizontal: margin_10),
                   children: [
@@ -133,13 +144,13 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
                           text: strAboutPack, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_18),
                     ),
                     CustomAboutPack(
-                        senderName: orderSummary.senderName.toString(),
-                        recieverName: 'Mo. Rehan Shareef',
-                        charges: '\$ 50',
-                        deliveryRequires: 'Yes',
-                        category: 'Electronics',
-                        weight: '5.5 Kg',
-                        size: 'Lxwxh'),
+                        senderName: senderName,
+                        recieverName: receiverName,
+                        charges: '\$ $charges',
+                        deliveryRequires: deliveryRequired,
+                        category: itemType,
+                        weight: weight,
+                        size: size),
                     CustomDivider(
                       height: height_15,
                       isDivider: false,
@@ -150,15 +161,15 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
                       child: CustomText(
                           text: strItemCateg, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_18),
                     ),
-                    CustomContainer(
+                    const CustomContainer(
                       title: strPriority,
                       assetImage: AssetImage(ImgAssets.itemCategory),
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(SignaturePadScreen());
+                        Get.toNamed(AppRoutes.signature);
                       },
-                      child: CustomContainer(
+                      child: const CustomContainer(
                         title: strAddSign,
                         assetImage: AssetImage(ImgAssets.plus),
                       ),
@@ -173,7 +184,7 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
                       fontWeight: fontWeight800,
                       font: font_16,
                       onPress: () {
-                        print('object');
+                        Get.toNamed(AppRoutes.signature);
                       },
                     ),
                     CustomDivider(
@@ -183,7 +194,7 @@ class _AddOrderFourScreenState extends State<AddOrderFourScreen> {
                   ],
                 );
               } else {
-               return const Center(
+                return const Center(
                   child: Text('An Error Occurred'),
                 );
               }

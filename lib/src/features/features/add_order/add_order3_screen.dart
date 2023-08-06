@@ -1,5 +1,6 @@
 import 'package:courier_app/src/components/custom_list.dart';
 import 'package:courier_app/src/components/custom_radio.dart';
+import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/features/features/add_order/add_order_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
@@ -42,9 +43,6 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
   int _currentStep = 3;
 
   bool isOpen = false;
-
-  final List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
-  String? selectedValue = strSelectItemType;
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +128,8 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
             obscure: false,
             height: height_15,
             textInputType: TextInputType.text,
-            controller: itemNameController,
+            controller: itemImageController,
+            readOnly: true,
             validator: ValidationBuilder().required().build(),
             onTap: () async {
               await addOrderController.getImage();
@@ -163,7 +162,7 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                   obscure: false,
                   height: height_15,
                   textInputType: TextInputType.text,
-                  controller: itemNameController,
+                  controller: itemSizeController,
                   validator: ValidationBuilder().required().build(),
                 ),
               ),
@@ -178,7 +177,7 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                   obscure: false,
                   height: height_15,
                   textInputType: TextInputType.text,
-                  controller: itemNameController,
+                  controller: itemWeightController,
                   validator: ValidationBuilder().required().build(),
                 ),
               ),
@@ -234,7 +233,9 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
               height: height_10,
             ),
             options: addOrderController.itemCategories,
-            onChanged: (String value) {},
+            onChanged: (String value) {
+              itemCategoryController.text = value;
+            },
           ),
 
           CustomDivider(
@@ -262,30 +263,34 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
               children: [
                 Row(
                   children: [
-                    Radio<String>(
-                      activeColor: AppColors.orange,
-                      value: 'Yes',
-                      groupValue: itemDeliveryRequiredController.text,
-                      onChanged: (value) {
-                        itemDeliveryRequiredController.text = value.toString();
-                      },
+                    Obx(
+                      () => Radio<String>(
+                        activeColor: AppColors.orange,
+                        value: 'Yes',
+                        groupValue: addOrderController.itemDeliveryRequired.value,
+                        onChanged: (value) {
+                          addOrderController.itemDeliveryRequired.value = value.toString();
+                          itemDeliveryRequiredController.text = value.toString();
+                        },
+                      ),
                     ),
-                    CustomText(
-                        text: strMale, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+                    CustomText(text: 'Yes', color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
                   ],
                 ),
                 Row(
                   children: [
-                    Radio<String>(
-                      activeColor: AppColors.orange,
-                      value: 'No',
-                      groupValue: itemDeliveryRequiredController.text,
-                      onChanged: (value) {
-                        itemDeliveryRequiredController.text = value.toString();
-                      },
+                    Obx(
+                      () => Radio<String>(
+                        activeColor: AppColors.orange,
+                        value: 'No',
+                        groupValue: addOrderController.itemDeliveryRequired.value,
+                        onChanged: (value) {
+                          addOrderController.itemDeliveryRequired.value = value.toString();
+                          itemDeliveryRequiredController.text = value.toString();
+                        },
+                      ),
                     ),
-                    CustomText(
-                        text: strFemale, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+                    CustomText(text: 'No', color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
                   ],
                 )
               ],
@@ -331,8 +336,10 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                         } else {
                           deliveryRequired = '0';
                         }
-                        await addOrderController.addPackageDetails(
-                            Get.parameters['orderId'].toString().trim(),
+                        print('orderId 3 ${addOrderController.orderId}');
+
+                        String orderId = await addOrderController.addPackageDetails(
+                            addOrderController.orderId,
                             itemNameController.text,
                             itemSizeController.text,
                             itemWeightController.text,
@@ -341,6 +348,9 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                             deliveryRequired,
                             itemImageController.text,
                             itemChargesController.text);
+                        if (orderId.isNotEmpty) {
+                          Get.toNamed(AppRoutes.addOrderFour);
+                        }
                       }
                     },
                   ),

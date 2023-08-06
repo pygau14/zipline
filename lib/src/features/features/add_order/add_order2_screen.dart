@@ -210,8 +210,9 @@ class _AddOrderTwoScreenState extends State<AddOrderTwoScreen> {
                         font: font_16,
                         onPress: () async {
                           if (formKey.currentState!.validate()) {
-                            String orderId = await addOrderController.addRecieverDetails(
-                                Get.parameters['orderId'].toString().trim(),
+                            print('order id  2${addOrderController.orderId}');
+                            String orderId = await addOrderController.addReceiverDetails(
+                                addOrderController.orderId,
                                 nameController.text,
                                 phoneController.text,
                                 emailController.text,
@@ -220,7 +221,7 @@ class _AddOrderTwoScreenState extends State<AddOrderTwoScreen> {
                                 cityTownController.text,
                                 pincodeController.text);
                             if (orderId.isNotEmpty) {
-                              Get.to('${AppRoutes.addOrderThree}?orderId=$orderId');
+                              Get.toNamed(AppRoutes.addOrderThree);
                             }
                           }
                         },

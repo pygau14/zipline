@@ -13,6 +13,7 @@ class OrderSummaryModel {
     String? charges,
     String? deliveryRequired,
     String? category,
+    String? type,
     String? weight,
     String? size,
   }) {
@@ -21,6 +22,7 @@ class OrderSummaryModel {
     _charges = charges;
     _deliveryRequired = deliveryRequired;
     _category = category;
+    _type = type;
     _weight = weight;
     _size = size;
   }
@@ -31,6 +33,7 @@ class OrderSummaryModel {
     _charges = json['charges'];
     _deliveryRequired = json['delivery_required'];
     _category = json['category'];
+    _type = json['Type'];
     _weight = json['weight'];
     _size = json['size'];
   }
@@ -40,6 +43,7 @@ class OrderSummaryModel {
   String? _charges;
   String? _deliveryRequired;
   String? _category;
+  String? _type;
   String? _weight;
   String? _size;
 
@@ -49,6 +53,7 @@ class OrderSummaryModel {
     String? charges,
     String? deliveryRequired,
     String? category,
+    String? type,
     String? weight,
     String? size,
   }) =>
@@ -58,6 +63,7 @@ class OrderSummaryModel {
         charges: charges ?? _charges,
         deliveryRequired: deliveryRequired ?? _deliveryRequired,
         category: category ?? _category,
+        type: type ?? _type,
         weight: weight ?? _weight,
         size: size ?? _size,
       );
@@ -72,6 +78,8 @@ class OrderSummaryModel {
 
   String? get category => _category;
 
+  String? get type => _type;
+
   String? get weight => _weight;
 
   String? get size => _size;
@@ -83,6 +91,7 @@ class OrderSummaryModel {
     map['charges'] = _charges;
     map['delivery_required'] = _deliveryRequired;
     map['category'] = _category;
+    map['Type'] = _type;
     map['weight'] = _weight;
     map['size'] = _size;
     return map;

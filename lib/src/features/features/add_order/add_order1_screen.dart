@@ -220,7 +220,8 @@ class _AddOrderOneScreenState extends State<AddOrderOneScreen> {
                                 cityTownController.text,
                                 pincodeController.text);
                             if (orderId.isNotEmpty) {
-                              Get.to('${AppRoutes.addOrderTwo}?orderId=$orderId');
+                              print('order id : $orderId');
+                              Get.toNamed(AppRoutes.addOrderTwo);
                             }
                           }
                         },

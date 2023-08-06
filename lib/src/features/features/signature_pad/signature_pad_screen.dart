@@ -1,11 +1,13 @@
-import 'dart:io' as File;
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:courier_app/src/components/custom_appbar.dart';
 import 'package:courier_app/src/components/custom_divider.dart';
 import 'package:courier_app/src/components/custom_text_button.dart';
+import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/core/constants/dimensions.dart';
 import 'package:courier_app/src/core/constants/font_weight.dart';
 import 'package:courier_app/src/core/constants/strings.dart';
+import 'package:courier_app/src/features/features/add_order/add_order_controller.dart';
 import 'package:courier_app/src/features/features/home/home_screen.dart';
 import 'package:courier_app/src/features/features/signature_pad/signature_pad_controller.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +20,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 
 class SignaturePadScreen extends GetView<SignaturePadController> {
-   SignaturePadScreen({super.key});
+  SignaturePadScreen({super.key});
 
-   SignaturePadController controller = SignaturePadController();
-
+  SignaturePadController controller = SignaturePadController();
+  AddOrderController addOrderController = Get.put(AddOrderController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,6 @@ class SignaturePadScreen extends GetView<SignaturePadController> {
         containerColor: AppColors.transparent,
         text: '',
         color: AppColors.transparent,
-
       ),
       body: SafeArea(
         child: ListView(
@@ -47,24 +48,23 @@ class SignaturePadScreen extends GetView<SignaturePadController> {
               height: height_500,
               width: width_340,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius_10),
-                border: Border.all(color: AppColors.black, width: 1.2, strokeAlign: BorderSide.strokeAlignOutside)
-              ),
+                  borderRadius: BorderRadius.circular(radius_10),
+                  border: Border.all(color: AppColors.black, width: 1.2, strokeAlign: BorderSide.strokeAlignOutside)),
               child: SfSignaturePad(
                 key: controller.signaturePadKey,
-                backgroundColor:  Colors.transparent,
+                backgroundColor: Colors.transparent,
                 minimumStrokeWidth: width_3,
                 maximumStrokeWidth: width_4,
               ),
             ),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: margin_140),
+              padding: EdgeInsets.symmetric(horizontal: margin_140),
               child: CustomTextButton(
                   text: strClear,
                   color: AppColors.orange,
                   fontWeight: fontWeight600,
                   font: font_13,
-                  onPress: (){
+                  onPress: () {
                     controller.signaturePadKey.currentState!.clear();
                   }),
             ),
@@ -72,23 +72,34 @@ class SignaturePadScreen extends GetView<SignaturePadController> {
               height: height_30,
               isDivider: false,
             ),
-            CustomButton(
-              text: strAddSign,
-              color: AppColors.white,
-              fontWeight: fontWeight800,
-              font: font_16,
-              onPress: () async {
-              ui.Image image = await controller.signaturePadKey.currentState!.toImage();
-              final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-              final Uint8List imageBytes = byteData!.buffer.asUint8List(
-                byteData.offsetInBytes, byteData.lengthInBytes
-              );
-              final String path = (await getApplicationSupportDirectory()).path;
-              final String fileName = '$path/output.png';
-              Get.to(HomeScreen());
-              },
-            ),
+            Obx(
+              () => addOrderController.isLoading.isTrue
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.orange,
+                      ),
+                    )
+                  : CustomButton(
+                      text: strAddSign,
+                      color: AppColors.white,
+                      fontWeight: fontWeight800,
+                      font: font_16,
+                      onPress: () async {
+                        ui.Image image = await controller.signaturePadKey.currentState!.toImage();
+                        final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+                        final Uint8List imageBytes =
+                            byteData!.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+                        final String path = (await getApplicationSupportDirectory()).path;
+                        final String fileName = '$path/output.png';
 
+                        await File(fileName).writeAsBytes(imageBytes);
+                        bool isSignatureAdded = await addOrderController.updateSenderSignature(fileName);
+                        if (isSignatureAdded) {
+                          Get.toNamed(AppRoutes.home);
+                        }
+                      },
+                    ),
+            ),
             CustomDivider(
               height: height_55,
               isDivider: false,
