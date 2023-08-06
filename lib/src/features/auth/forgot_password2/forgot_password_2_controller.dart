@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:courier_app/src/core/config/routes.dart';
+import 'package:courier_app/src/core/constants/user_constants.dart';
+import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ForgotPassword2Controller extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,6 +24,51 @@ class ForgotPassword2Controller extends GetxController {
   RxBool isTimerRunning = false.obs;
   RxInt otpResendTimer = 0.obs;
   int? resendToken;
+
+  String userPhone = '';
+  String userEmail = '';
+
+  Future<void> setUserPhoneAndEmail(String phone, String email) async {
+    isLoading.value = true;
+    userPhone = phone;
+    userEmail = email;
+    await prefs.setString(UserContants.userPhone, userPhone);
+    await prefs.setString(UserContants.userEmail, userEmail);
+    isLoading.value = false;
+  }
+
+  SharedPreferences prefs = PreferencesService.instance;
+
+  Future<void> setNewPassword(String password) async {
+    isLoading.value = true;
+    final url = Uri.parse('https://courier.hnktrecruitment.in/forgot-password');
+
+    try {
+      final response = await http.post(url,
+          body: jsonEncode({
+            // 'email': prefs.getString(UserContants.userEmail),
+            // 'mobile_number': prefs.getString(UserContants.userPhone),
+            'email': 'user223@gmail.com',
+            'mobile_number': '1234567891',
+            'password': password,
+            'confirm_password': password,
+          }),
+          headers: {'Content-Type': 'application/json'});
+      var data = response.body.toString();
+      var jsonData = jsonDecode(data);
+      if (response.statusCode == 200) {
+        int userId = jsonData[UserContants.userId];
+        await prefs.setInt(UserContants.userId, userId);
+        Fluttertoast.showToast(msg: jsonData['message'], timeInSecForIosWeb: 20);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Fluttertoast.showToast(msg: jsonData['error'], timeInSecForIosWeb: 20);
+      }
+    } on Exception catch (e) {
+      Fluttertoast.showToast(msg: e.toString(), timeInSecForIosWeb: 20);
+    }
+    isLoading.value = false;
+  }
 
   void startOtpResendTimer() {
     const int resendDelaySeconds = 60;
@@ -46,6 +97,7 @@ class ForgotPassword2Controller extends GetxController {
       if (await emailAuth2.sendOTP() == true) {
         isEmailCodeSent.value = true;
         Fluttertoast.showToast(msg: "email OTP sent successfully", timeInSecForIosWeb: 10);
+        Get.offNamed(AppRoutes.forgotOtpEmail);
       } else {
         Fluttertoast.showToast(msg: "Email OTP Failed to send", timeInSecForIosWeb: 10);
       }
@@ -62,11 +114,13 @@ class ForgotPassword2Controller extends GetxController {
       if (await emailAuth2.verifyOTP(otp: otp)) {
         isEmailVerified.value = true;
         Fluttertoast.showToast(msg: "Email OTP verified successfully", timeInSecForIosWeb: 10);
+        Get.offNamed(AppRoutes.newPass);
       } else {
         Fluttertoast.showToast(msg: "Can't verify email OTP", timeInSecForIosWeb: 10);
       }
     } on Exception catch (e) {
       isLoading.value = false;
+      print('double u');
       Fluttertoast.showToast(msg: "Cant verify email otp");
     }
     isLoading.value = false;
@@ -135,9 +189,6 @@ class ForgotPassword2Controller extends GetxController {
   void _verificationCompleted(PhoneAuthCredential credential) async {
     isPhoneCodeSent.value = true;
     await _signInWithCredential(credential);
-    Fluttertoast.showToast(msg: "Phone OTP verified successfully", timeInSecForIosWeb: 10);
-    // Get.toNamed('${AppRoutes.otpEmail}?email=$userEmail');
-    // setEmailOTPConfig(userEmail);
     print('verification complete called ${isPhoneCodeSent.value}');
   }
 
@@ -153,8 +204,8 @@ class ForgotPassword2Controller extends GetxController {
     isPhoneCodeSent.value = true;
     this.resendToken = resendToken; // Store the resendToken
     Fluttertoast.showToast(msg: "Phone OTP sent successfully", timeInSecForIosWeb: 10);
-    // Get.toNamed('${AppRoutes.otpMob}?phone=$userPhone');
-    print('code sent called ${isPhoneCodeSent.value}');
+    Get.toNamed('${AppRoutes.forgotOtpMob}?phone=$userPhone&route=forgot');
+    print('code sent called $userPhone');
   }
 
   Future<void> _signInWithCredential(AuthCredential credential) async {
@@ -167,8 +218,8 @@ class ForgotPassword2Controller extends GetxController {
         Fluttertoast.showToast(msg: "Phone OTP verified successfully", timeInSecForIosWeb: 10);
         isPhoneVerified.value = true;
         startOtpResendTimer();
-        // Get.toNamed('${AppRoutes.otpEmail}?email=$userEmail');
-        // setEmailOTPConfig(userEmail);
+        Get.toNamed('${AppRoutes.forgotOtpEmail}?email=$userEmail&route=forgot');
+        setEmailOTPConfig(userEmail);
       }
     } catch (e) {
       isLoading.value = false;

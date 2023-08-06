@@ -1,5 +1,6 @@
 import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/features/auth/auth/auth.dart';
+import 'package:courier_app/src/features/auth/forgot_password2/forgot_password_2_controller.dart';
 import 'package:courier_app/src/features/auth/otp_email/otp_email_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,8 @@ class OTPMobScreen extends GetView<AuthController> {
   OTPMobScreen({super.key});
 
   final AuthController authController = Get.put(AuthController());
+  final ForgotPassword2Controller forgotPassword2Controller = Get.put(ForgotPassword2Controller());
+
   final TextEditingController otpController = TextEditingController();
 
   @override
@@ -115,7 +118,12 @@ class OTPMobScreen extends GetView<AuthController> {
                   fontWeight: fontWeight800,
                   font: font_16,
                   onPress: () async {
-                    await authController.verifyPhoneOTP(otpController.text);
+                    if (Get.parameters['route'].toString() == 'forgot') {
+                      print(Get.parameters['route']);
+                      await forgotPassword2Controller.verifyPhoneOTP(otpController.text);
+                    } else {
+                      await authController.verifyPhoneOTP(otpController.text);
+                    }
                   },
                 ),
         ),

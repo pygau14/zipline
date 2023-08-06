@@ -16,7 +16,7 @@ import '../../../core/constants/strings.dart';
 import '../auth/auth.dart';
 
 class ForgotPassword2Screen extends GetView<AuthController> {
-   ForgotPassword2Screen({super.key});
+  ForgotPassword2Screen({super.key});
 
   final ForgotPassword2Controller _forgotPassword2Controller = Get.put(ForgotPassword2Controller());
 
@@ -54,7 +54,7 @@ class ForgotPassword2Screen extends GetView<AuthController> {
                 border: AppColors.orange,
                 icon: ImgAssets.msgIcon,
                 title: strSendCodeSmS,
-                subtitle: Get.parameters['phone'].toString()),
+                subtitle: '+${Get.parameters['phone'].toString().trim()}'),
             CustomDivider(
               height: height_16,
               isDivider: false,
@@ -64,20 +64,25 @@ class ForgotPassword2Screen extends GetView<AuthController> {
                 border: AppColors.greyColor,
                 icon: ImgAssets.emailIcon,
                 title: strSendCodeEmail,
-                subtitle: Get.parameters['email'].toString()),
+                subtitle: Get.parameters['email'].toString().trim()),
             CustomDivider(
               height: height_60,
               isDivider: false,
             ),
-            CustomButton(
-              text: strGetOtp,
-              color: AppColors.white,
-              fontWeight: fontWeight800,
-              font: font_16,
-              onPress: () async{
-                await _forgotPassword2Controller.sendPhoneOTP(Get.parameters['phone']!);
-              },
-            ),
+            Obx(() => _forgotPassword2Controller.isLoading.isTrue
+                ? const Center(child: CircularProgressIndicator())
+                : CustomButton(
+                    text: strGetOtp,
+                    color: AppColors.white,
+                    fontWeight: fontWeight800,
+                    font: font_16,
+                    onPress: () async {
+                      String phone = Get.parameters['phone'].toString().trim();
+                      String email = Get.parameters['email'].toString().trim();
+                      await _forgotPassword2Controller.setUserPhoneAndEmail(phone, email);
+                      await _forgotPassword2Controller.sendPhoneOTP('+$phone');
+                    },
+                  )),
           ],
         ),
       ),

@@ -1,3 +1,7 @@
+import 'package:courier_app/src/features/auth/forgot_otp_email/forgot_otp_email_binding.dart';
+import 'package:courier_app/src/features/auth/forgot_otp_email/forgot_otp_email_screen.dart';
+import 'package:courier_app/src/features/auth/forgot_otp_mob/forgot_otp_binding.dart';
+import 'package:courier_app/src/features/auth/forgot_otp_mob/forgot_otp_mobile_screen.dart';
 import 'package:courier_app/src/features/auth/forgot_password/forgot_password_binding.dart';
 import 'package:courier_app/src/features/auth/forgot_password/forgot_password_screen.dart';
 import 'package:courier_app/src/features/auth/forgot_password2/forge_password2.dart';
@@ -39,7 +43,9 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String otpMob = '/otpmob';
+  static const String forgotOtpMob = '/forgotOtpmob';
   static const String otpEmail = '/otpemail';
+  static const String forgotOtpEmail = '/forgotOtpemail';
   static const String newPass = '/newpass';
   static const String forgotPass = '/forgotpass';
   static const String forgotPass2 = '/forgotpass2';
@@ -63,13 +69,17 @@ class AppRoutes {
 
   static String getOtpMobRoute() => otpMob;
 
+  static String getForgotOtpMobRoute() => forgotOtpMob;
+
   static String getOtpEmailRoute() => otpEmail;
+
+  static String getForgotOtpEmailRoute() => forgotOtpEmail;
 
   static String getNewPasswordRoute() => newPass;
 
   static String getForgotPassRoute() => forgotPass;
-  static String getForgotPass2Route() => forgotPass2;
 
+  static String getForgotPass2Route() => forgotPass2;
 
   static String getSignatureRoute() => signature;
 
@@ -116,21 +126,32 @@ class AppRoutes {
           routeName: getOtpEmailRoute(),
           page: () => OTPEmailScreen(),
         );
-      case newPass:
+      case forgotOtpMob:
         return GetPageRoute(
-            settings: settings, routeName: getNewPasswordRoute(), page: () => const NewPasswordScreen());
+          settings: settings,
+          routeName: getForgotOtpMobRoute(),
+          page: () => ForgotOTPMobScreen(),
+        );
+      case forgotOtpEmail:
+        return GetPageRoute(
+          settings: settings,
+          routeName: getForgotOtpEmailRoute(),
+          page: () => ForgotOTPEmailScreen(),
+        );
+      case newPass:
+        return GetPageRoute(settings: settings, routeName: getNewPasswordRoute(), page: () => NewPasswordScreen());
       case forgotPass:
         return GetPageRoute(
           settings: settings,
           routeName: getForgotPassRoute(),
-          page: () =>  ForgotPasswordScreen(),
+          page: () => ForgotPasswordScreen(),
         );
 
       case forgotPass2:
         return GetPageRoute(
           settings: settings,
           routeName: getForgotPass2Route(),
-          page: () =>  ForgotPassword2Screen(),
+          page: () => ForgotPassword2Screen(),
         );
       case signature:
         return GetPageRoute(
@@ -141,7 +162,7 @@ class AppRoutes {
       case home:
         return GetPageRoute(settings: settings, routeName: getHomeRoute(), page: () => HomeScreen());
       case main:
-        // return GetPageRoute(settings: settings, routeName: getMainRoute(), page: () => MainScreen());
+      // return GetPageRoute(settings: settings, routeName: getMainRoute(), page: () => MainScreen());
       case addOrderOne:
         return GetPageRoute(
           settings: settings,
@@ -229,20 +250,30 @@ class AppRoutes {
           binding: OtpEmailBinding(),
         ),
         GetPage(
+          name: forgotOtpMob,
+          page: () => ForgotOTPMobScreen(),
+          binding: ForgotOtpMobBinding(),
+        ),
+        GetPage(
+          name: forgotOtpEmail,
+          page: () => ForgotOTPEmailScreen(),
+          binding: ForgotOtpEmailBinding(),
+        ),
+        GetPage(
           name: newPass,
-          page: () => const NewPasswordScreen(),
+          page: () => NewPasswordScreen(),
           binding: NewPasswordBinding(),
         ),
         GetPage(
           name: forgotPass,
-          page: () =>  ForgotPasswordScreen(),
+          page: () => ForgotPasswordScreen(),
           binding: ForgotPasswordBinding(),
         ),
-    GetPage(
-      name: forgotPass2,
-      page: () =>  ForgotPassword2Screen(),
-      binding: ForgotPassword2Binding(),
-    ),
+        GetPage(
+          name: forgotPass2,
+          page: () => ForgotPassword2Screen(),
+          binding: ForgotPassword2Binding(),
+        ),
         GetPage(
           name: signature,
           page: () => SignaturePadScreen(),

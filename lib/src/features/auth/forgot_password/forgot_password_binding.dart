@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 
 import '../auth/auth.dart';
 
-class ForgotPasswordBinding implements Bindings{
+class ForgotPasswordBinding implements Bindings {
   @override
-  void dependencies(){
+  void dependencies() {
     Get.put<AuthController>(AuthController());
   }
 }

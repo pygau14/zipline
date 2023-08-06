@@ -60,6 +60,7 @@ dependencies:
 
   form_validator: ^2.1.1
   shared_preferences: ^2.2.0
+  image_gallery_saver: ^2.0.3
 
 
 dev_dependencies:

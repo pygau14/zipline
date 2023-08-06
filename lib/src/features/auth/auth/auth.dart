@@ -40,11 +40,13 @@ class AuthController extends GetxController {
   String userProfilePhoto = '';
   RxString userGender = ''.obs;
 
+  RxString registerStatus = ''.obs;
+
   void setUserGender(String gender) {
     userGender.value = gender;
   }
 
-  void setUserInformation({
+  Future<void> setUserInformation({
     required String name,
     required String email,
     required String company,
@@ -54,7 +56,7 @@ class AuthController extends GetxController {
     required String idFront,
     required String idBack,
     required String profilePhoto,
-  }) {
+  }) async {
     isLoading.value = true;
     userName = name;
     userEmail = email;
@@ -66,17 +68,17 @@ class AuthController extends GetxController {
     userIdBack = idBack;
     userProfilePhoto = profilePhoto;
 
-    // await prefs.setString(UserContants.userName, name);
-    // await prefs.setString(UserContants.userEmail, email);
-    // await prefs.setString(UserContants.passWord, passWord);
-    // await prefs.setString(UserContants.userPhone, phone);
-    // await prefs.setString(UserContants.companyName, company);
-    // await prefs.setString(UserContants.userAddress, address);
-    // await prefs.setString(UserContants.userIdFront, idFront);
-    // await prefs.setString(UserContants.userIdBack, idBack);
-    // await prefs.setString(UserContants.userIdFront, idFront);
-    // await prefs.setString(UserContants.userIdFront, profilePhoto);
-    // await prefs.setString(UserContants.userGender, userGender.value);
+    await prefs.setString(UserContants.userName, name);
+    await prefs.setString(UserContants.userEmail, email);
+    await prefs.setString(UserContants.passWord, passWord);
+    await prefs.setString(UserContants.userPhone, phone);
+    await prefs.setString(UserContants.companyName, company);
+    await prefs.setString(UserContants.userAddress, address);
+    await prefs.setString(UserContants.userIdFront, idFront);
+    await prefs.setString(UserContants.userIdBack, idBack);
+    await prefs.setString(UserContants.userIdFront, idFront);
+    await prefs.setString(UserContants.userIdFront, profilePhoto);
+    await prefs.setString(UserContants.userGender, userGender.value);
   }
 
   Future<void> registerUser() async {
@@ -103,18 +105,21 @@ class AuthController extends GetxController {
       var jsonData = jsonDecode(data);
 
       if (response.statusCode == 200) {
-        String userId = jsonData[UserContants.userId].toString();
-        await prefs.setString(UserContants.userId, userId);
+        int userId = jsonData[UserContants.userId];
+        await prefs.setInt(UserContants.userId, userId);
         Fluttertoast.showToast(msg: "Registration Successful", timeInSecForIosWeb: 20);
+        registerStatus.value = 'success';
         Get.offAllNamed(AppRoutes.home);
       } else if (response.statusCode == 500) {
         String error = jsonData['error'];
         Fluttertoast.showToast(msg: '$error Try Again', timeInSecForIosWeb: 20, toastLength: Toast.LENGTH_LONG);
+        registerStatus.value = 'error';
         Get.offAllNamed(AppRoutes.register);
       } else {
         String error = jsonData['error'];
+        Fluttertoast.showToast(msg: "Registration Failed, $error", timeInSecForIosWeb: 20);
+        registerStatus.value = 'error';
         Get.offAllNamed(AppRoutes.register);
-        Fluttertoast.showToast(msg: "Login Failed, $error", timeInSecForIosWeb: 20);
       }
     } on Exception catch (e) {
       Fluttertoast.showToast(msg: e.toString(), timeInSecForIosWeb: 20);
@@ -169,7 +174,7 @@ class AuthController extends GetxController {
     });
   }
 
-  void setEmailOTPConfig(String email) async {
+  Future<void> setEmailOTPConfig(String email) async {
     isLoading.value = true;
     try {
       emailAuth2.setConfig(
@@ -182,8 +187,7 @@ class AuthController extends GetxController {
       if (await emailAuth2.sendOTP() == true) {
         isEmailCodeSent.value = true;
         Fluttertoast.showToast(msg: "email OTP sent successfully", timeInSecForIosWeb: 10);
-
-        Get.offNamed('${AppRoutes.otpEmail}?email=$userEmail');
+        // await registerUser();
       } else {
         Fluttertoast.showToast(msg: "Email OTP Failed to send", timeInSecForIosWeb: 10);
       }
@@ -200,7 +204,9 @@ class AuthController extends GetxController {
       if (await emailAuth2.verifyOTP(otp: otp)) {
         isEmailVerified.value = true;
         Fluttertoast.showToast(msg: "Email OTP verified successfully", timeInSecForIosWeb: 10);
+        registerUser();
       } else {
+        print('aaaaauth');
         Fluttertoast.showToast(msg: "Can't verify email OTP", timeInSecForIosWeb: 10);
       }
     } on Exception catch (e) {
@@ -274,8 +280,8 @@ class AuthController extends GetxController {
     isPhoneCodeSent.value = true;
     await _signInWithCredential(credential);
     Fluttertoast.showToast(msg: "Phone OTP verified successfully", timeInSecForIosWeb: 10);
-    Get.toNamed('${AppRoutes.otpEmail}?email=$userEmail');
-    setEmailOTPConfig('m67uzair@gmail.com');
+    // Get.toNamed('${AppRoutes.otpEmail}?email=$userEmail');
+    // setEmailOTPConfig(userEmail);
     print('verification complete called ${isPhoneCodeSent.value}');
   }
 
@@ -305,7 +311,7 @@ class AuthController extends GetxController {
         Fluttertoast.showToast(msg: "Phone OTP verified successfully", timeInSecForIosWeb: 10);
         isPhoneVerified.value = true;
         startOtpResendTimer();
-        Get.toNamed('${AppRoutes.otpEmail}?email=$userEmail');
+        Get.offNamed('${AppRoutes.otpEmail}?email=$userEmail');
         setEmailOTPConfig(userEmail);
       }
     } catch (e) {

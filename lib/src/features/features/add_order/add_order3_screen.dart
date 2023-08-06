@@ -1,7 +1,9 @@
 import 'package:courier_app/src/components/custom_list.dart';
 import 'package:courier_app/src/components/custom_radio.dart';
+import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/features/features/add_order/add_order_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
@@ -25,15 +27,22 @@ class AddOrderThreeScreen extends StatefulWidget {
 }
 
 class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
+  TextEditingController itemNameController = TextEditingController();
+  TextEditingController itemSizeController = TextEditingController();
+  TextEditingController itemWeightController = TextEditingController();
+  TextEditingController itemCategoryController = TextEditingController();
+  TextEditingController itemTypeController = TextEditingController();
+  TextEditingController itemDeliveryRequiredController = TextEditingController();
+  TextEditingController itemChargesController = TextEditingController();
+  TextEditingController itemImageController = TextEditingController();
 
-  AddOrderController controller = Get.put(AddOrderController());
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  int _currentStep = 0;
+  final AddOrderController addOrderController = Get.put(AddOrderController());
+
+  int _currentStep = 3;
 
   bool isOpen = false;
-
-  final List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
-  String? selectedValue=strSelectItemType;
 
   @override
   Widget build(BuildContext context) {
@@ -45,67 +54,60 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
         text: '',
         color: AppColors.transparent,
       ),
-      body: SafeArea(child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: margin_15),
-        children: [
-        Container(
-        width: double.infinity, //// Take full width of the screen
-        height: height_60,
-        decoration: BoxDecoration(
-          color: AppColors.transparent,
-        ),
-        child: Stepper(
-          currentStep: _currentStep,
-          type: StepperType.horizontal,
-          steps: [
-            Step(
-              title: Text(''),
-              content: Text(''),
-              isActive: _currentStep>=0,
+      body: SafeArea(
+          child: Form(
+        key: formKey,
+        child: ListView(padding: EdgeInsets.symmetric(horizontal: margin_15), children: [
+          Container(
+            width: double.infinity, //// Take full width of the screen
+            height: height_60,
+            decoration: BoxDecoration(
+              color: AppColors.transparent,
             ),
-            Step(
-              title: Text(''),
-              content: Text(''),
-              isActive: _currentStep>=1,
+            child: Stepper(
+              currentStep: _currentStep,
+              type: StepperType.horizontal,
+              steps: [
+                Step(
+                  title: Text(''),
+                  content: Text(''),
+                  isActive: _currentStep >= 0,
+                ),
+                Step(
+                  title: Text(''),
+                  content: Text(''),
+                  isActive: _currentStep >= 1,
+                ),
+                Step(
+                  title: Text(''),
+                  content: Text(''),
+                  isActive: _currentStep >= 2,
+                ),
+                Step(
+                  title: Text(''),
+                  content: Text(''),
+                  isActive: _currentStep >= 3,
+                ),
+              ],
+              elevation: 0,
+              onStepTapped: (index) {
+                // setState(() {
+                //   _currentStep = index;
+                // });
+              },
             ),
-            Step(
-              title: Text(''),
-              content: Text(''),
-              isActive: _currentStep>=2,
-            ),
-            Step(
-              title: Text(''),
-              content: Text(''),
-              isActive: _currentStep>=3,
-            ),
-          ],
-          elevation: 0,
-          onStepTapped: (index) {
-            setState(() {
-              _currentStep=index;
-            });
-          },
-        ),
-      ),
+          ),
 
-
-
-        Align(
-          alignment: Alignment.topLeft,
-          child: CustomText(
-              text: strPackageDetails,
-              color1: AppColors.black,
-              fontWeight: fontWeight700,
-              fontSize: font_20),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: CustomText(
-              text: strEnterDetBelow,
-              color1: AppColors.greyColor,
-              fontWeight: fontWeight400,
-              fontSize: font_13),
-        ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: CustomText(
+                text: strPackageDetails, color1: AppColors.black, fontWeight: fontWeight700, fontSize: font_20),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: CustomText(
+                text: strEnterDetBelow, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+          ),
 
           CustomTextField(
             labelText: strEnterItemName,
@@ -113,7 +115,10 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
               image: AssetImage(ImgAssets.boxItem),
             ),
             obscure: false,
-            height: height_15, textInputType: TextInputType.text,
+            height: height_15,
+            textInputType: TextInputType.text,
+            controller: itemNameController,
+            validator: ValidationBuilder().required().build(),
           ), //user text-field
           CustomTextField(
             labelText: strUploadItemImg,
@@ -121,7 +126,27 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
               image: AssetImage(ImgAssets.image),
             ),
             obscure: false,
-            height: height_15, textInputType: TextInputType.text,
+            height: height_15,
+            textInputType: TextInputType.text,
+            controller: itemImageController,
+            readOnly: true,
+            validator: ValidationBuilder().required().build(),
+            onTap: () async {
+              await addOrderController.getImage();
+              itemImageController.text = addOrderController.imagePath.value;
+            },
+            suffixIcon: Obx(() {
+              final imagePath = addOrderController.imagePath.value;
+              return Visibility(
+                visible: itemImageController.text.isNotEmpty,
+                child: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    itemImageController.clear();
+                  },
+                ),
+              );
+            }),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,7 +160,10 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                     image: AssetImage(ImgAssets.itemSize),
                   ),
                   obscure: false,
-                  height: height_15, textInputType: TextInputType.text,
+                  height: height_15,
+                  textInputType: TextInputType.text,
+                  controller: itemSizeController,
+                  validator: ValidationBuilder().required().build(),
                 ),
               ),
               SizedBox(
@@ -147,7 +175,10 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
                     image: AssetImage(ImgAssets.itemWeight),
                   ),
                   obscure: false,
-                  height: height_15, textInputType: TextInputType.text,
+                  height: height_15,
+                  textInputType: TextInputType.text,
+                  controller: itemWeightController,
+                  validator: ValidationBuilder().required().build(),
                 ),
               ),
             ],
@@ -163,10 +194,18 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
             textColor: AppColors.orange,
             fillColor: AppColors.white,
             borderColor: AppColors.greyColor,
-            suffixIcon: Image(image: AssetImage(ImgAssets.scroll), height: height_10,),
-            prefixIcon: Image(image: AssetImage(ImgAssets.boxItem), height: height_10,),
-            options: controller.dropdownItems,
-            onChanged: (String value) {},
+            suffixIcon: Image(
+              image: AssetImage(ImgAssets.scroll),
+              height: height_10,
+            ),
+            prefixIcon: Image(
+              image: AssetImage(ImgAssets.boxItem),
+              height: height_10,
+            ),
+            options: addOrderController.itemTypes,
+            onChanged: (String value) {
+              itemTypeController.text = value;
+            },
           ),
 
           CustomDivider(
@@ -185,10 +224,18 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
             textColor: AppColors.orange,
             fillColor: AppColors.white,
             borderColor: AppColors.greyColor,
-            suffixIcon: Image(image: AssetImage(ImgAssets.scroll), height: height_10,),
-            prefixIcon: Image(image: AssetImage(ImgAssets.itemCategory), height: height_10,),
-            options: controller.dropdownCateg,
-            onChanged: (String value) {},
+            suffixIcon: Image(
+              image: AssetImage(ImgAssets.scroll),
+              height: height_10,
+            ),
+            prefixIcon: Image(
+              image: AssetImage(ImgAssets.itemCategory),
+              height: height_10,
+            ),
+            options: addOrderController.itemCategories,
+            onChanged: (String value) {
+              itemCategoryController.text = value;
+            },
           ),
 
           CustomDivider(
@@ -196,21 +243,59 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
             isDivider: false,
           ),
 
-
           Align(
             alignment: Alignment.topLeft,
             child: CustomText(
-                text: strDeliveryRequired,
-                color1: AppColors.greyColor,
-                fontWeight: fontWeight400,
-                fontSize: font_13),
+                text: strDeliveryRequired, color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
           ),
           CustomDivider(
             height: height_5,
             isDivider: false,
           ),
 
-          CustomRadioButton(),
+          Container(
+            height: height_45,
+            decoration: BoxDecoration(
+                color: AppColors.transparent,
+                borderRadius: BorderRadius.circular(radius_10),
+                border: Border.all(color: AppColors.greyColor.withOpacity(.3))),
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    Obx(
+                      () => Radio<String>(
+                        activeColor: AppColors.orange,
+                        value: 'Yes',
+                        groupValue: addOrderController.itemDeliveryRequired.value,
+                        onChanged: (value) {
+                          addOrderController.itemDeliveryRequired.value = value.toString();
+                          itemDeliveryRequiredController.text = value.toString();
+                        },
+                      ),
+                    ),
+                    CustomText(text: 'Yes', color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Obx(
+                      () => Radio<String>(
+                        activeColor: AppColors.orange,
+                        value: 'No',
+                        groupValue: addOrderController.itemDeliveryRequired.value,
+                        onChanged: (value) {
+                          addOrderController.itemDeliveryRequired.value = value.toString();
+                          itemDeliveryRequiredController.text = value.toString();
+                        },
+                      ),
+                    ),
+                    CustomText(text: 'No', color1: AppColors.greyColor, fontWeight: fontWeight400, fontSize: font_13),
+                  ],
+                )
+              ],
+            ),
+          ),
 
           CustomDivider(
             height: height_15,
@@ -222,23 +307,55 @@ class _AddOrderThreeScreenState extends State<AddOrderThreeScreen> {
               image: AssetImage(ImgAssets.charges),
             ),
             obscure: false,
-            height: height_15, textInputType: TextInputType.text,
+            height: height_15,
+            textInputType: TextInputType.text,
+            controller: itemChargesController,
+            validator: ValidationBuilder().required().build(),
           ),
           CustomDivider(
             height: height_25,
             isDivider: false,
           ),
 
-          CustomButton(
-            text: strContinue,
-            color: AppColors.white,
-            fontWeight: fontWeight800,
-            font: font_16,
-            onPress: () {
-              Get.to(AddOrderFourScreen());
-            },
+          Obx(
+            () => addOrderController.isLoading.isTrue
+                ? const Center(
+                    child: CircularProgressIndicator(
+                    color: AppColors.orange,
+                  ))
+                : CustomButton(
+                    text: strContinue,
+                    color: AppColors.white,
+                    fontWeight: fontWeight800,
+                    font: font_16,
+                    onPress: () async {
+                      if (formKey.currentState!.validate()) {
+                        String deliveryRequired = '';
+                        if (itemDeliveryRequiredController.text == 'Yes') {
+                          deliveryRequired = '1';
+                        } else {
+                          deliveryRequired = '0';
+                        }
+                        print('orderId 3 ${addOrderController.orderId}');
+
+                        String orderId = await addOrderController.addPackageDetails(
+                            addOrderController.orderId,
+                            itemNameController.text,
+                            itemSizeController.text,
+                            itemWeightController.text,
+                            itemTypeController.text,
+                            itemCategoryController.text,
+                            deliveryRequired,
+                            itemImageController.text,
+                            itemChargesController.text);
+                        if (orderId.isNotEmpty) {
+                          Get.toNamed(AppRoutes.addOrderFour);
+                        }
+                      }
+                    },
+                  ),
           ),
-          ]
+        ]),
       )),
     );
   }
