@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/features/features/signature_pad/signature_pad_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,8 +18,11 @@ import '../../../core/constants/palette.dart';
 import '../../../core/constants/strings.dart';
 
 class SignatureRecieverScreen extends GetView<SignaturePadController> {
-   SignatureRecieverScreen({super.key});
-  SignaturePadController controller = SignaturePadController();
+  final String orderId;
+
+  SignatureRecieverScreen({super.key, required this.orderId});
+
+  SignaturePadController signatureController = Get.put(SignaturePadController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,6 @@ class SignatureRecieverScreen extends GetView<SignaturePadController> {
         containerColor: AppColors.transparent,
         text: '',
         color: AppColors.transparent,
-
       ),
       body: SafeArea(
         child: ListView(
@@ -44,23 +48,22 @@ class SignatureRecieverScreen extends GetView<SignaturePadController> {
               width: width_340,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(radius_10),
-                  border: Border.all(color: AppColors.black, width: 1.2, strokeAlign: BorderSide.strokeAlignOutside)
-              ),
+                  border: Border.all(color: AppColors.black, width: 1.2, strokeAlign: BorderSide.strokeAlignOutside)),
               child: SfSignaturePad(
                 key: controller.signaturePadKey,
-                backgroundColor:  Colors.transparent,
+                backgroundColor: Colors.transparent,
                 minimumStrokeWidth: width_3,
                 maximumStrokeWidth: width_4,
               ),
             ),
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: margin_140),
+              padding: EdgeInsets.symmetric(horizontal: margin_140),
               child: CustomTextButton(
                   text: strClear,
                   color: AppColors.orange,
                   fontWeight: fontWeight600,
                   font: font_13,
-                  onPress: (){
+                  onPress: () {
                     controller.signaturePadKey.currentState!.clear();
                   }),
             ),
@@ -76,14 +79,19 @@ class SignatureRecieverScreen extends GetView<SignaturePadController> {
               onPress: () async {
                 ui.Image image = await controller.signaturePadKey.currentState!.toImage();
                 final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-                final Uint8List imageBytes = byteData!.buffer.asUint8List(
-                    byteData.offsetInBytes, byteData.lengthInBytes
-                );
+                final Uint8List imageBytes =
+                    byteData!.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
                 final String path = (await getApplicationSupportDirectory()).path;
                 final String fileName = '$path/output.png';
+
+                await File(fileName).writeAsBytes(imageBytes);
+                bool isSignatureAdded = await signatureController.updateReceiverSignature(fileName, orderId);
+                if (isSignatureAdded) {
+                  Get.back();
+                  Get.back();
+                }
               },
             ),
-
             CustomDivider(
               height: height_55,
               isDivider: false,

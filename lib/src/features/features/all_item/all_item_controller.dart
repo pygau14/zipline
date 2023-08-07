@@ -16,7 +16,10 @@ class AllItemController extends GetxController {
   }
 
   final RxList<String> dropdownItems = RxList(['today', '7 Days', 'Custom Day', 'Clear Filter']);
+  RxList<AllOrdersModel> searchedOrdersList = RxList<AllOrdersModel>([]);
+
   final List<String> statuses = ['All', 'Completed', 'Delivered', 'Pickup Pending'];
+  RxString searchQuery = RxString('');
 
   RxBool isLoading = false.obs;
   RxList<AllOrdersModel> ordersList = RxList<AllOrdersModel>([]);
@@ -24,6 +27,23 @@ class AllItemController extends GetxController {
 
   String selectedStatus = 'All';
   String selectedDate = '';
+
+  void filterOrdersBySearchQuery() {
+    if (searchQuery.value.isEmpty) {
+      searchedOrdersList.assignAll(ordersList);
+    } else {
+      final filteredOrders = ordersList
+          .where(
+            (order) =>
+                order.orderToken!.toString().toLowerCase().contains(searchQuery.value.toLowerCase()) ||
+                order.senderName!.toString().toLowerCase().contains(searchQuery.value.toLowerCase()) ||
+                order.receiverName!.toString().toLowerCase().contains(searchQuery.value.toLowerCase()) ||
+                order.itemName!.toString().toLowerCase().contains(searchQuery.value.toLowerCase()),
+          )
+          .toList();
+      searchedOrdersList.assignAll(filteredOrders);
+    }
+  }
 
   Future<List<AllOrdersModel>> fetchAllOrders() async {
     try {

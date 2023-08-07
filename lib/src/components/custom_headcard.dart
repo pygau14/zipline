@@ -16,10 +16,7 @@ class CustomHeadcard extends StatelessWidget {
     return Container(
       height: height_140,
       width: width_240,
-      decoration: BoxDecoration(
-        color: AppColors.lightOrange,
-        borderRadius: BorderRadius.circular(radius_15)
-      ),
+      decoration: BoxDecoration(color: AppColors.lightOrange, borderRadius: BorderRadius.circular(radius_15)),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: margin_15),
         child: Column(
@@ -32,14 +29,11 @@ class CustomHeadcard extends StatelessWidget {
                 Image(image: AssetImage(ImgAssets.boxTrack))
               ],
             ),
-
             CustomText(text: strTrackId, color1: AppColors.greyColor, fontWeight: fontWeight500, fontSize: font_12),
-
             CustomDivider(
               height: height_10,
               isDivider: false,
             ),
-            
             searchF(suffix: ImgAssets.searchIcon)
           ],
         ),
@@ -48,30 +42,28 @@ class CustomHeadcard extends StatelessWidget {
   }
 }
 
-Widget searchF ({required String suffix, prefixIcon}){
-  return  TextFormField(
-    style: TextStyle(color: AppColors.orange),
+Widget searchF(
+    {required String suffix, TextEditingController? controller, Function()? onTap, Function(String)? onChanged}) {
+  return TextFormField(
+    onChanged: onChanged,
+    style: const TextStyle(color: AppColors.orange),
     decoration: InputDecoration(
       labelText: strShippingUID,
       labelStyle: TextStyle(fontSize: font_12),
       fillColor: AppColors.white,
       suffixIcon: InkWell(
-        onTap: (){
-          print('object');
-        },
+        onTap: onTap,
         child: Padding(
           padding: EdgeInsets.only(right: margin_12, top: margin_4, bottom: margin_4),
           child: Image(image: AssetImage(suffix), width: width_10),
-        ),),
+        ),
+      ),
       filled: true,
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius_8),
-          borderSide: BorderSide(color: AppColors.transparent)
-      ),
+          borderRadius: BorderRadius.circular(radius_8), borderSide: BorderSide(color: AppColors.transparent)),
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius_8),
-          borderSide: BorderSide(color: AppColors.transparent)
-      ),
+          borderRadius: BorderRadius.circular(radius_8), borderSide: BorderSide(color: AppColors.transparent)),
     ),
+    controller: controller,
   );
 }

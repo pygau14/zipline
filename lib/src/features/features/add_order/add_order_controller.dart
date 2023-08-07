@@ -208,35 +208,6 @@ class AddOrderController extends GetxController {
     return isSignatureUpdated;
   }
 
-  Future<bool> updateReceiverSignature(String signatureImagePath) async {
-    isLoading.value = true;
-    bool isSignatureUpdated = false;
-
-    final url = Uri.parse('https://courier.hnktrecruitment.in/update-receiver-signature');
-
-    try {
-      var request = http.MultipartRequest('POST', url);
-      request.fields['order_id'] = '4';
-
-      request.files.add(await http.MultipartFile.fromPath('receiver_signature', signatureImagePath));
-
-      final response = await request.send();
-      final data = await response.stream.bytesToString();
-      final jsonData = jsonDecode(data);
-
-      if (response.statusCode == 200) {
-        isSignatureUpdated = true;
-        Fluttertoast.showToast(msg: jsonData['message']);
-      } else {
-        Fluttertoast.showToast(msg: jsonData['error']);
-      }
-    } on Exception catch (e) {
-      Fluttertoast.showToast(msg: "Check your internet connection and try again");
-    }
-
-    isLoading.value = false;
-    return isSignatureUpdated;
-  }
 
 // Future<void> updateOrderPriority(String priority) async {
 //   print('priotiy' + priority);

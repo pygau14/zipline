@@ -6,6 +6,7 @@ import 'package:courier_app/src/core/constants/palette.dart';
 import 'package:courier_app/src/core/constants/strings.dart';
 import 'package:courier_app/src/features/features/all_item/all_item_controller.dart';
 import 'package:courier_app/src/features/features/all_item/all_orders_model.dart';
+import 'package:courier_app/src/features/features/item_details/delivered%20_details.dart';
 import 'package:courier_app/src/features/features/item_details/pending_details_screen.dart';
 import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class AllItemScreen extends StatefulWidget {
 
 class _AllItemScreenState extends State<AllItemScreen> {
   AllItemController allItemsController = Get.put(AllItemController());
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,8 @@ class _AllItemScreenState extends State<AllItemScreen> {
                   unselectedLabelStyle: const TextStyle(color: AppColors.orange),
                   labelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   onTap: (index) {
+                    allItemsController.searchQuery.value = '';
+                    searchController.clear();
                     // Fetch orders based on the selected tab
                     allItemsController.selectedStatus = allItemsController.statuses[index];
                     if (allItemsController.selectedStatus == 'All' && allItemsController.selectedDate.isEmpty) {
@@ -100,7 +104,13 @@ class _AllItemScreenState extends State<AllItemScreen> {
                               color: AppColors.greyColor.withOpacity(.5),
                             ),
                             borderRadius: BorderRadius.circular(radius_10)),
-                        child: searchF(suffix: ImgAssets.searchIcon),
+                        child: searchF(
+                            suffix: ImgAssets.searchIcon,
+                            controller: searchController,
+                            onChanged: (value) {
+                              allItemsController.searchQuery.value = value;
+                              allItemsController.filterOrdersBySearchQuery();
+                            }),
                       ),
                       Container(
                           height: 70,
@@ -157,218 +167,75 @@ class _AllItemScreenState extends State<AllItemScreen> {
                   width: width_340,
                   child: TabBarView(
                     children: <Widget>[
-                      Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
-                        child: Obx(
-                          () => allItemsController.isLoading.isTrue
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                  color: AppColors.orange,
-                                ))
-                              : ListView.builder(
-                                  itemCount: allItemsController.ordersList.length,
-                                  itemBuilder: (context, index) {
-                                    AllOrdersModel order = allItemsController.ordersList[index];
-                                    String orderToken = order.orderToken.toString();
-                                    String senderName = order.senderName.toString();
-                                    String receiverName = order.receiverName.toString();
-                                    String productName = order.itemName.toString();
-                                    String dateAndTime = order.date.toString();
-                                    String status = order.status.toString();
-                                    Color buttonColor;
-                                    Color bgColor = AppColors.white;
+                      for (int i = 0; i < 4; i++)
+                        Container(
+                          height: 20,
+                          width: 20,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
+                          child: Obx(() {
+                            final List<AllOrdersModel> orders = allItemsController.searchQuery.isEmpty
+                                ? allItemsController.ordersList
+                                : allItemsController.searchedOrdersList;
+                            return allItemsController.isLoading.isTrue
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                    color: AppColors.orange,
+                                  ))
+                                : ListView.builder(
+                                    itemCount: orders.length,
+                                    itemBuilder: (context, index) {
+                                      AllOrdersModel order = orders[index];
+                                      String orderToken = order.orderToken.toString();
+                                      String senderName = order.senderName.toString();
+                                      String receiverName = order.receiverName.toString();
+                                      String productName = order.itemName.toString();
+                                      String dateAndTime = order.date.toString();
+                                      String status = order.status.toString();
+                                      Color buttonColor;
+                                      Color bgColor = AppColors.white;
 
-                                    if (status.toLowerCase() == 'pickup pending') {
-                                      buttonColor = AppColors.yellow;
-                                    } else if (status.toLowerCase() == 'completed') {
-                                      buttonColor = AppColors.orange;
-                                    } else {
-                                      buttonColor = AppColors.blue;
-                                    }
+                                      if (status.toLowerCase() == 'pickup pending') {
+                                        buttonColor = AppColors.yellow;
+                                      } else if (status.toLowerCase() == 'completed') {
+                                        buttonColor = AppColors.orange;
+                                      } else {
+                                        buttonColor = AppColors.blue;
+                                      }
 
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.to(() => CompleteOrdersScreen());
-                                        },
-                                        child: ShippingChip(
-                                          orderUidNo: orderToken,
-                                          senderName: senderName,
-                                          recieverName: receiverName,
-                                          productName: productName,
-                                          time: dateAndTime,
-                                          buttonColor: buttonColor,
-                                          buttonName: status,
-                                          bgColor: bgColor,
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: InkWell(
+                                          onTap: () {
+                                            if (status.toLowerCase() == 'completed') {
+                                              Get.to(() => CompleteOrdersScreen(
+                                                    orderToken: orderToken,
+                                                  ));
+                                            } else if (status.toLowerCase() == 'delivered') {
+                                              Get.to(() => DeliveredOrdersScreen(
+                                                    orderToken: orderToken,
+                                                  ));
+                                            } else if (status.toLowerCase() == 'pickup pending') {
+                                              Get.to(() => PendingDetailsScreen(
+                                                    orderToken: orderToken,
+                                                  ));
+                                            }
+                                          },
+                                          child: ShippingChip(
+                                            orderUidNo: orderToken,
+                                            senderName: senderName,
+                                            recieverName: receiverName,
+                                            productName: productName,
+                                            time: dateAndTime,
+                                            buttonColor: buttonColor,
+                                            buttonName: status,
+                                            bgColor: bgColor,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                      );
+                                    },
+                                  );
+                          }),
                         ),
-                      ),
-                      Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
-                        child: Obx(
-                          () => allItemsController.isLoading.isTrue
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                  color: AppColors.orange,
-                                ))
-                              : ListView.builder(
-                                  itemCount: allItemsController.ordersList.length,
-                                  itemBuilder: (context, index) {
-                                    AllOrdersModel order = allItemsController.ordersList[index];
-                                    String orderToken = order.orderToken.toString();
-                                    String senderName = order.senderName.toString();
-                                    String receiverName = order.receiverName.toString();
-                                    String productName = order.itemName.toString();
-                                    String dateAndTime = order.date.toString();
-                                    String status = order.status.toString();
-                                    Color buttonColor;
-                                    Color bgColor = AppColors.white;
-
-                                    if (status.toLowerCase() == 'pickup pending') {
-                                      buttonColor = AppColors.yellow;
-                                    } else if (status.toLowerCase() == 'completed') {
-                                      buttonColor = AppColors.orange;
-                                    } else {
-                                      buttonColor = AppColors.blue;
-                                    }
-
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.to(const CompleteOrdersScreen());
-                                        },
-                                        child: ShippingChip(
-                                          orderUidNo: orderToken,
-                                          senderName: senderName,
-                                          recieverName: receiverName,
-                                          productName: productName,
-                                          time: dateAndTime,
-                                          buttonColor: buttonColor,
-                                          buttonName: status,
-                                          bgColor: bgColor,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                        ),
-                      ),
-                      Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
-                        child: Obx(
-                          () => allItemsController.isLoading.isTrue
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                  color: AppColors.orange,
-                                ))
-                              : ListView.builder(
-                                  itemCount: allItemsController.ordersList.length,
-                                  itemBuilder: (context, index) {
-                                    AllOrdersModel order = allItemsController.ordersList[index];
-                                    String orderToken = order.orderToken.toString();
-                                    String senderName = order.senderName.toString();
-                                    String receiverName = order.receiverName.toString();
-                                    String productName = order.itemName.toString();
-                                    String dateAndTime = order.date.toString();
-                                    String status = order.status.toString();
-                                    Color buttonColor;
-                                    Color bgColor = AppColors.white;
-
-                                    if (status.toLowerCase() == 'pickup pending') {
-                                      buttonColor = AppColors.yellow;
-                                    } else if (status.toLowerCase() == 'completed') {
-                                      buttonColor = AppColors.orange;
-                                    } else {
-                                      buttonColor = AppColors.blue;
-                                    }
-
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.to(const CompleteOrdersScreen());
-                                        },
-                                        child: ShippingChip(
-                                          orderUidNo: orderToken,
-                                          senderName: senderName,
-                                          recieverName: receiverName,
-                                          productName: productName,
-                                          time: dateAndTime,
-                                          buttonColor: buttonColor,
-                                          buttonName: status,
-                                          bgColor: bgColor,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                        ),
-                      ),
-                      Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
-                        child: Obx(
-                          () => allItemsController.isLoading.isTrue
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                  color: AppColors.orange,
-                                ))
-                              : ListView.builder(
-                                  itemCount: allItemsController.ordersList.length,
-                                  itemBuilder: (context, index) {
-                                    AllOrdersModel order = allItemsController.ordersList[index];
-                                    String orderToken = order.orderToken.toString();
-                                    String senderName = order.senderName.toString();
-                                    String receiverName = order.receiverName.toString();
-                                    String productName = order.itemName.toString();
-                                    String dateAndTime = order.date.toString();
-                                    String status = order.status.toString();
-                                    Color buttonColor;
-                                    Color bgColor = AppColors.white;
-
-                                    if (status.toLowerCase() == 'pickup pending') {
-                                      buttonColor = AppColors.yellow;
-                                    } else if (status.toLowerCase() == 'completed') {
-                                      buttonColor = AppColors.orange;
-                                    } else {
-                                      buttonColor = AppColors.blue;
-                                    }
-
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.to(const CompleteOrdersScreen());
-                                        },
-                                        child: ShippingChip(
-                                          orderUidNo: orderToken,
-                                          senderName: senderName,
-                                          recieverName: receiverName,
-                                          productName: productName,
-                                          time: dateAndTime,
-                                          buttonColor: buttonColor,
-                                          buttonName: status,
-                                          bgColor: bgColor,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                        ),
-                      ),
                     ],
                   ),
                 )

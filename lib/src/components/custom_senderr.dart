@@ -10,7 +10,8 @@ import 'custom_divider.dart';
 import 'custom_text.dart';
 
 class CustomSender extends StatelessWidget {
-  const CustomSender({Key?key,
+  const CustomSender({
+    Key? key,
     required this.name,
     required this.size,
     required this.imgText,
@@ -20,8 +21,7 @@ class CustomSender extends StatelessWidget {
     required this.delivery,
     required this.charges,
     required this.heading,
-
-  }): super(key: key);
+  }) : super(key: key);
 
   final String name;
   final String size;
@@ -40,21 +40,15 @@ class CustomSender extends StatelessWidget {
         Align(
           heightFactor: height_1,
           alignment: Alignment.topLeft,
-          child: CustomText(
-              text: heading,
-              color1: AppColors.black,
-              fontWeight: fontWeight600,
-              fontSize: font_15),
+          child: CustomText(text: heading, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_15),
         ),
-
         Container(
-         // height: height_300,
+          // height: height_300,
           //width: width_60,
           decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(radius_20),
-              border: Border.all(color: AppColors.greyColor.withOpacity(.3))
-          ),
+              border: Border.all(color: AppColors.greyColor.withOpacity(.3))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -66,7 +60,6 @@ class CustomSender extends StatelessWidget {
               line(text: strItemCategory, text2: category),
               line(text: strDeliveryRequired, text2: delivery),
               line(text: strCharges, text2: charges),
-
             ],
           ),
         ),
@@ -74,7 +67,7 @@ class CustomSender extends StatelessWidget {
     );
   }
 
-  Widget lineImage ({required String text, required String text2}){
+  Widget lineImage({required String text, required String text2}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: margin_30),
       child: Column(
@@ -83,21 +76,19 @@ class CustomSender extends StatelessWidget {
             height: height_10,
           ),
           Row(
-            mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomText(
-                  text: text,
-                  color1: AppColors.greyColor,
-                  fontWeight: fontWeight500,
-                  fontSize: font_12),
+              CustomText(text: text, color1: AppColors.greyColor, fontWeight: fontWeight500, fontSize: font_12),
               Container(
-                  height: 40,
+                height: 40,
                 width: 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(radius_5),
-                  image: DecorationImage(image: AssetImage(text2))
+                  image: DecorationImage(
+                    image: NetworkImage(text2),
+                  ),
                 ),
-                   )
+              )
             ],
           ),
           Divider(

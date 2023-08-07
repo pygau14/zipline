@@ -187,24 +187,24 @@ class AppRoutes {
           routeName: getAddOrderFourRoute(),
           page: () => AddOrderFourScreen(),
         );
-      case completeOrders:
-        return GetPageRoute(
-          settings: settings,
-          routeName: getCompleteOrderRoute(),
-          page: () => CompleteOrdersScreen(),
-        );
-      case pendingOrders:
-        return GetPageRoute(
-          settings: settings,
-          routeName: getPendingOrdersRoute(),
-          page: () => PendingDetailsScreen(),
-        );
-      case recieverSign:
-        return GetPageRoute(
-          settings: settings,
-          routeName: getRecieverSignRoute(),
-          page: () => SignatureRecieverScreen(),
-        );
+      // case completeOrders:
+      //   return GetPageRoute(
+      //     settings: settings,
+      //     routeName: getCompleteOrderRoute(),
+      //     page: () => CompleteOrdersScreen(),
+      //   );
+      // case pendingOrders:
+      //   return GetPageRoute(
+      //     settings: settings,
+      //     routeName: getPendingOrdersRoute(),
+      //     page: () => PendingDetailsScreen(),
+      //   );
+      // case recieverSign:
+      //   return GetPageRoute(
+      //     settings: settings,
+      //     routeName: getRecieverSignRoute(),
+      //     page: () => SignatureRecieverScreen(),
+      //   );
       case allItem:
         return GetPageRoute(
           settings: settings,
@@ -293,21 +293,21 @@ class AppRoutes {
         GetPage(name: addOrderTwo, page: () => AddOrderTwoScreen(), binding: AddOrderBinding()),
         GetPage(name: addOrderThree, page: () => AddOrderThreeScreen(), binding: AddOrderBinding()),
         GetPage(name: addOrderFour, page: () => AddOrderFourScreen(), binding: AddOrderBinding()),
-        GetPage(
-          name: completeOrders,
-          page: () => CompleteOrdersScreen(),
-          binding: DetailsBinding(),
-        ),
-        GetPage(
-          name: pendingOrders,
-          page: () => PendingDetailsScreen(),
-          binding: DetailsBinding(),
-        ),
-        GetPage(
-          name: recieverSign,
-          page: () => SignatureRecieverScreen(),
-          binding: SignaturePadBinding(),
-        ),
+        // GetPage(
+        //   name: completeOrders,
+        //   page: () => CompleteOrdersScreen(),
+        //   binding: DetailsBinding(),
+        // ),
+        // GetPage(
+        //   name: pendingOrders,
+        //   page: () => PendingDetailsScreen(),
+        //   binding: DetailsBinding(),
+        // ),
+        // GetPage(
+        //   name: recieverSign,
+        //   page: () => SignatureRecieverScreen(),
+        //   binding: SignaturePadBinding(),
+        // ),
         GetPage(
           name: allItem,
           page: () => AllItemScreen(),
