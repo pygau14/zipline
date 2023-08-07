@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProfileController extends GetxController {
   RxString imagePath = ''.obs;
   RxBool isLoading = false.obs;
+  RxString userGender = ''.obs;
   SharedPreferences prefs = PreferencesService.instance;
 
   Future<UserProfileModel?> fetchUserProfile() async {
@@ -26,11 +27,6 @@ class ProfileController extends GetxController {
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body.toString());
         userProfile = UserProfileModel.fromJson(jsonData);
-
-        Fluttertoast.showToast(
-          msg: "Name: ${userProfile.name}\nEmail: ${userProfile.email}\nMobile: ${userProfile.mobileNumber}",
-          toastLength: Toast.LENGTH_LONG,
-        );
       } else {
         Fluttertoast.showToast(
           msg: "Failed to fetch user profile",
@@ -70,8 +66,8 @@ class ProfileController extends GetxController {
         request.files.add(await http.MultipartFile.fromPath('govt_id_back', govtIdBackPath));
       }
       if (profilePicPath.isNotEmpty) {
-        print('yead'+profilePicPath);
-        request.files.add(await http.MultipartFile.fromPath('profile', profilePicPath));
+        print('yead' + profilePicPath);
+        request.files.add(await http.MultipartFile.fromPath('profile_photo', profilePicPath));
         print('done');
       }
 

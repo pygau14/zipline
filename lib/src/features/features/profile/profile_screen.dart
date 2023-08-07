@@ -10,7 +10,6 @@ import 'package:courier_app/src/features/features/profile/user_profile_model.dar
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../components/custom_appbar.dart';
@@ -51,23 +50,29 @@ class ProfileScreen extends StatelessWidget {
               } else if (snapshot.hasData) {
                 String userName = snapshot.data!.name.toString();
                 String userEmail = snapshot.data!.email.toString();
-                String userProfileUrl = snapshot.data!.toString();
+                String userProfileUrl = snapshot.data!.profilePictureUrl.toString();
+                print('profile pic url + ${userProfileUrl}');
                 return ListView(
                   padding: EdgeInsets.symmetric(horizontal: margin_15),
                   children: [
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: radius_40,
-                          child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: userProfileUrl.isNotEmpty
-                                  ? Image(image: NetworkImage(userProfileUrl), height: height_20)
-                                  : const Image(
-                                      image: AssetImage(ImgAssets.badge),
-                                    )),
-                        ),
+                        userProfileUrl.isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(userProfileUrl),
+                                radius: radius_40,
+                                child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                              )
+                            : CircleAvatar(
+                                backgroundImage: const AssetImage(ImgAssets.badge),
+                                radius: radius_40,
+                                child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                              ),
                       ],
                     ),
                     Align(

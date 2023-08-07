@@ -1,9 +1,5 @@
 import 'dart:io';
 
-import 'package:courier_app/src/components/custom_navigation_bar.dart';
-import 'package:courier_app/src/components/custom_prof_container.dart';
-import 'package:courier_app/src/components/custom_radio.dart';
-import 'package:courier_app/src/components/custompaint.dart';
 import 'package:courier_app/src/features/features/profile/profile_controller.dart';
 import 'package:courier_app/src/features/features/profile/user_profile_model.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +10,6 @@ import '../../../components/custom_appbar.dart';
 import '../../../components/custom_button.dart';
 import '../../../components/custom_divider.dart';
 import '../../../components/custom_text.dart';
-import '../../../components/custom_text_button.dart';
 import '../../../components/custom_textfield.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/dimensions.dart';
@@ -64,6 +59,7 @@ class EditProfileScreen extends GetView<ProfileController> {
                 companyController.text = snapshot.data!.companyName.toString();
                 addressController.text = snapshot.data!.address.toString();
                 genderController.text = snapshot.data!.gender.toString();
+                profileController.userGender.value = snapshot.data!.gender.toString();
 
                 print(profilePicUrl);
 
@@ -78,14 +74,30 @@ class EditProfileScreen extends GetView<ProfileController> {
                             profileController.getImage();
                             updatedProfilePic = profileController.imagePath.value;
                           },
-                          child: CircleAvatar(
-                            backgroundImage: updatedProfilePic != null && updatedProfilePic.isNotEmpty
-                                ? NetworkImage(profilePicUrl)
-                                : Image.file(File(updatedProfilePic)).image,
-                            radius: radius_40,
-                            child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                          child: Obx(
+                            () => profileController.imagePath.value.isNotEmpty
+                                ? CircleAvatar(
+                                    backgroundImage: FileImage(File(updatedProfilePic)),
+                                    radius: radius_40,
+                                    child: Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                                  )
+                                : profilePicUrl.isNotEmpty
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(profilePicUrl),
+                                        radius: radius_40,
+                                        child: Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                                      )
+                                    : CircleAvatar(
+                                        backgroundImage: const AssetImage(ImgAssets.badge),
+                                        radius: radius_40,
+                                        child: Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Image(image: const AssetImage(ImgAssets.camera), height: height_22)),
+                                      ),
                           ),
                         ),
                       ],
@@ -166,43 +178,47 @@ class EditProfileScreen extends GetView<ProfileController> {
                       controller: addressController,
                       textInputType: TextInputType.text,
                     ),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            Radio<String>(
-                              activeColor: AppColors.orange,
-                              value: 'Male',
-                              groupValue: genderController.text,
-                              onChanged: (value) {
-                                genderController.text = value.toString();
-                              },
-                            ),
-                            CustomText(
-                                text: 'Male',
-                                color1: AppColors.greyColor,
-                                fontWeight: fontWeight400,
-                                fontSize: font_13),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio<String>(
-                              activeColor: AppColors.orange,
-                              value: 'Female',
-                              groupValue: genderController.text,
-                              onChanged: (value) {
-                                genderController.text = value.toString();
-                              },
-                            ),
-                            CustomText(
-                                text: 'Female',
-                                color1: AppColors.greyColor,
-                                fontWeight: fontWeight400,
-                                fontSize: font_13),
-                          ],
-                        )
-                      ],
+                    Obx(
+                      () => Row(
+                        children: [
+                          Row(
+                            children: [
+                              Radio<String>(
+                                activeColor: AppColors.orange,
+                                value: 'Male',
+                                groupValue: profileController.userGender.value,
+                                onChanged: (value) {
+                                  genderController.text = value.toString();
+                                  profileController.userGender.value = value.toString();
+                                },
+                              ),
+                              CustomText(
+                                  text: 'Male',
+                                  color1: AppColors.greyColor,
+                                  fontWeight: fontWeight400,
+                                  fontSize: font_13),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                activeColor: AppColors.orange,
+                                value: 'Female',
+                                groupValue: profileController.userGender.value,
+                                onChanged: (value) {
+                                  genderController.text = value.toString();
+                                  profileController.userGender.value = value.toString();
+                                },
+                              ),
+                              CustomText(
+                                  text: 'Female',
+                                  color1: AppColors.greyColor,
+                                  fontWeight: fontWeight400,
+                                  fontSize: font_13),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                     CustomDivider(
                       height: height_15,
