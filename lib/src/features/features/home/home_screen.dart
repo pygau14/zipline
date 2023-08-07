@@ -37,13 +37,14 @@ class HomeScreen extends StatelessWidget {
               colorBackCircle: AppColors.transparent,
               border: AppColors.transparent,
               icon: ImgAssets.transparent,
-              image: AssetImage(ImgAssets.forgotArt),
-              title: '${strHello} Mizan,',
+              image: const AssetImage(ImgAssets.forgotArt),
+              title: '$strHello Mizan,',
               subtitle: strWelcomeBack),
           CustomHeadCard(
             controller: orderSearchController,
             onTap: () async {
               await homeController.searchByOrderToken(orderSearchController.text);
+              orderSearchController.clear();
             },
           ),
           CustomText(text: strService, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_19),
@@ -63,21 +64,23 @@ class HomeScreen extends StatelessWidget {
                   image: AssetImage(ImgAssets.boxPick),
                   text: strAddPick,
                   onTap: () {
-                    Get.to( AllItemScreen(selectedStatus: 'Pickup Pending'));
+                    Get.to(AllItemScreen(selectedStatus: 'Pickup Pending'));
                   },
                 ),
                 CustomItems(
                   image: const AssetImage(ImgAssets.boxPending),
                   text: strDelPending,
                   onTap: () {
-                    Get.to( AllItemScreen(selectedStatus: 'Delivery Pending'));
+                    Get.to(AllItemScreen(selectedStatus: 'Delivery Pending'));
                   },
                 ),
                 CustomItems(
                   image: const AssetImage(ImgAssets.boxAllItem),
                   text: strAllItem,
                   onTap: () {
-                    Get.to( AllItemScreen(selectedStatus: 'All',));
+                    Get.to(AllItemScreen(
+                      selectedStatus: 'All',
+                    ));
                   },
                 ),
               ],
@@ -93,7 +96,9 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: fontWeight600,
                 font: font_15,
                 onPress: () {
-                  Get.to( AllItemScreen(selectedStatus: 'All',));
+                  Get.to(AllItemScreen(
+                    selectedStatus: 'All',
+                  ));
                 },
               ),
             ],

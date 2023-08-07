@@ -161,7 +161,7 @@ class AddOrderController extends GetxController {
     print('order id 4 $orderId');
     // isLoading.value = true;
     OrderSummaryModel? orderSummary;
-    final url = Uri.parse('https://courier.hnktrecruitment.in/order-summary/4');
+    final url = Uri.parse('https://courier.hnktrecruitment.in/order-summary/$orderId');
     try {
       final response = await http.get(url);
       final data = response.body.toString();
@@ -207,7 +207,6 @@ class AddOrderController extends GetxController {
     isLoading.value = false;
     return isSignatureUpdated;
   }
-
 
 // Future<void> updateOrderPriority(String priority) async {
 //   print('priotiy' + priority);

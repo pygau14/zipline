@@ -1,8 +1,13 @@
+import 'package:courier_app/src/components/custom_button.dart';
+import 'package:courier_app/src/components/custom_container.dart';
 import 'package:courier_app/src/components/custom_sender.dart';
+import 'package:courier_app/src/components/custom_text.dart';
 import 'package:courier_app/src/core/constants/dimensions.dart';
+import 'package:courier_app/src/core/constants/font_weight.dart';
 import 'package:courier_app/src/core/constants/palette.dart';
 import 'package:courier_app/src/features/features/item_details/details_controller.dart';
 import 'package:courier_app/src/features/features/item_details/order_details_model.dart';
+import 'package:courier_app/src/features/features/signature_pad/signature_reciever_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,20 +32,6 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   Color buttonColor = AppColors.orange;
   String buttonTitle = 'Completed';
 
-  // if (order.status == 'completed') {
-  // Get.to(() => CompleteOrdersScreen(
-  // orderToken: orderToken,
-  // ));
-  // } else if (status == 'delivered') {
-  // Get.to(() => DeliveredOrdersScreen(
-  // orderToken: orderToken,
-  // ));
-  // } else if (status == 'pickup pending') {
-  // Get.to(() => PendingDetailsScreen(
-  // orderToken: orderToken,
-  // ));
-  // } else if (status == 'delivery pending') {}
-  //
   @override
   void initState() {
     super.initState();
@@ -114,6 +105,50 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               height: height_55,
               isDivider: false,
             ),
+            widget.order.status.toString().toLowerCase() == 'pickup pending'
+                ? Align(
+                    heightFactor: 1.5,
+                    alignment: Alignment.topLeft,
+                    child: CustomText(
+                        text: strTakeRecSign, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_15),
+                  )
+                : const SizedBox.shrink(),
+            widget.order.status.toString().toLowerCase() == 'pickup pending'
+                ? InkWell(
+                    onTap: () {
+                      Get.to(
+                        () => SignatureRecieverScreen(orderId: widget.order.orderId.toString()),
+                      );
+                    },
+                    child: const CustomContainer(
+                      title: strAddSign,
+                      assetImage: AssetImage(ImgAssets.plus),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            widget.order.status.toString().toLowerCase() == 'pickup pending'
+                ? CustomDivider(
+                    height: height_25,
+                    isDivider: false,
+                  )
+                : const SizedBox.shrink(),
+            widget.order.status.toString().toLowerCase() == 'pickup pending'
+                ? CustomButton(
+                    text: strMarkAsComp,
+                    color: AppColors.white,
+                    fontWeight: fontWeight800,
+                    font: font_16,
+                    onPress: () {
+                      Get.to(() => SignatureRecieverScreen(orderId: widget.order.orderId.toString()));
+                    },
+                  )
+                : const SizedBox.shrink(),
+            widget.order.status.toString().toLowerCase() == 'pickup pending'
+                ? CustomDivider(
+                    height: height_65,
+                    isDivider: false,
+                  )
+                : const SizedBox.shrink()
           ],
         ),
       ),

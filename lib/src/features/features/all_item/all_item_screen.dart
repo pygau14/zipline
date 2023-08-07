@@ -21,7 +21,7 @@ class AllItemScreen extends StatefulWidget {
   final String selectedStatus;
   late var initialIndex;
 
-   AllItemScreen({Key? key, this.selectedStatus = 'All'}) : super(key: key);
+  AllItemScreen({Key? key, this.selectedStatus = 'All'}) : super(key: key);
 
   @override
   State<AllItemScreen> createState() => _AllItemScreenState();
@@ -35,9 +35,9 @@ class _AllItemScreenState extends State<AllItemScreen> {
   void initState() {
     allItemsController.selectedStatus = widget.selectedStatus;
     widget.initialIndex = allItemsController.statuses.indexOf(widget.selectedStatus);
-    if(allItemsController.selectedStatus == 'All') {
+    if (allItemsController.selectedStatus == 'All') {
       allItemsController.fetchAllOrders();
-    }else{
+    } else {
       allItemsController.fetchOrdersByStatus(widget.selectedStatus);
     }
     super.initState();
@@ -71,7 +71,6 @@ class _AllItemScreenState extends State<AllItemScreen> {
                   unselectedLabelStyle: const TextStyle(color: AppColors.orange),
                   labelStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   onTap: (index) {
-                    allItemsController.searchQuery.value = '';
                     searchController.clear();
                     // Fetch orders based on the selected tab
                     allItemsController.selectedStatus = allItemsController.statuses[index];
@@ -123,9 +122,9 @@ class _AllItemScreenState extends State<AllItemScreen> {
                         child: searchF(
                             suffix: ImgAssets.searchIcon,
                             controller: searchController,
-                            onChanged: (value) {
-                              allItemsController.searchQuery.value = value;
-                              allItemsController.filterOrdersBySearchQuery();
+                            onTap: () async{
+                              await allItemsController.searchByOrderToken(searchController.text);
+                              searchController.clear();
                             }),
                       ),
                       Container(
@@ -189,9 +188,7 @@ class _AllItemScreenState extends State<AllItemScreen> {
                           width: 20,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
                           child: Obx(() {
-                            final List<AllOrdersModel> orders = allItemsController.searchQuery.isEmpty
-                                ? allItemsController.ordersList
-                                : allItemsController.searchedOrdersList;
+                            final List<AllOrdersModel> orders = allItemsController.ordersList;
                             return allItemsController.isLoading.isTrue
                                 ? const Center(
                                     child: CircularProgressIndicator(
