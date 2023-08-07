@@ -8,8 +8,12 @@ import 'package:flutter/material.dart';
 
 import '../core/constants/palette.dart';
 
-class CustomHeadcard extends StatelessWidget {
-  const CustomHeadcard({super.key});
+class CustomHeadCard extends StatelessWidget {
+  final Function()? onTap;
+  final Function(String)? onChanged;
+  final TextEditingController? controller;
+
+  const CustomHeadCard({super.key, this.onTap, this.onChanged, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class CustomHeadcard extends StatelessWidget {
               height: height_10,
               isDivider: false,
             ),
-            searchF(suffix: ImgAssets.searchIcon)
+            searchF(suffix: ImgAssets.searchIcon, onChanged: onChanged, onTap: onTap, controller: controller)
           ],
         ),
       ),

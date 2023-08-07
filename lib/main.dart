@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             smartManagement: SmartManagement.full,
             initialRoute:
-                prefs.getInt(UserContants.userId) == null ? AppRoutes.getLoginRoute() : AppRoutes.getLoginRoute(),
+                prefs.getInt(UserContants.userId) == null ? AppRoutes.getLoginRoute() : AppRoutes.getHomeRoute(),
             // !firstLogin ? AppRoutes.getLoginRoute() : AppRoutes.getIntroRoute(),
             initialBinding: prefs.getInt(UserContants.userId) == null ? AddOrderBinding() : AddOrderBinding(),
             // !firstLogin ? LoginBinding() : IntroBinding(),

@@ -2,6 +2,13 @@ import 'dart:convert';
 
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:courier_app/src/features/features/all_item/all_orders_model.dart';
+import 'package:courier_app/src/features/features/home/order_tracking_screen.dart';
+import 'package:courier_app/src/features/features/item_details/complete_details.dart';
+import 'package:courier_app/src/features/features/item_details/delivered%20_details.dart';
+import 'package:courier_app/src/features/features/item_details/order_details_model.dart';
+import 'package:courier_app/src/features/features/item_details/pending_details_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +21,52 @@ class HomeController extends GetxController {
   SharedPreferences prefs = PreferencesService.instance;
   RxList<AllOrdersModel> ordersList = RxList<AllOrdersModel>([]);
 
-  Future<List<AllOrdersModel>> fetchAllOrders() async {
+  Future<void> searchByOrderToken(String orderToken) async {
+    try {
+      if (_validateOrderToken(orderToken)) {
+        isLoading.value = true;
+        showProgressDialog();
+        final url = Uri.parse('https://courier.hnktrecruitment.in/fetch-order-details/$orderToken');
+        final response = await http.get(url);
+        final data = response.body.toString();
+        final jsonData = jsonDecode(data);
+        if (response.statusCode == 200) {
+          OrderDetailsModel order = OrderDetailsModel.fromJson(jsonData);
+          String status = order.status.toString().toLowerCase();
+          isLoading.value == false;
+          Get.back();
+          Get.to(() => OrderTrackingScreen(order: order));
+        } else {
+          isLoading.value == false;
+          Get.back();
+          Fluttertoast.showToast(msg: "Order with $orderToken token doesn't exist");
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Invalid token format");
+      }
+    } on Exception catch (e) {
+      Get.back();
+      Fluttertoast.showToast(msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+    }
+  }
+
+  bool _validateOrderToken(String value) {
+    return RegExp(r'^CRC\d+$').hasMatch(value);
+  }
+
+  void showProgressDialog() {
+    Get.dialog(
+      WillPopScope(
+        onWillPop: () async => false,
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  Future<List<AllOrdersModel>> fetchRecentOrders() async {
     try {
       isLoading.value = true;
       final userId = prefs.getInt(UserContants.userId) ?? -1;
@@ -23,7 +75,6 @@ class HomeController extends GetxController {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         print('All Orders Fetched');
-
         final dynamic responseData = jsonDecode(response.body.toString());
         if (responseData is List) {
           final jsonData = jsonDecode(response.body.toString()) as List;

@@ -20,9 +20,10 @@ import '../../../components/custom_text.dart';
 import '../../../core/constants/font_weight.dart';
 
 class HomeScreen extends StatelessWidget {
-   HomeScreen({super.key});
+  HomeScreen({super.key});
 
   HomeController homeController = Get.put(HomeController());
+  TextEditingController orderSearchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,12 @@ class HomeScreen extends StatelessWidget {
               image: AssetImage(ImgAssets.forgotArt),
               title: '${strHello} Mizan,',
               subtitle: strWelcomeBack),
-          CustomHeadcard(),
+           CustomHeadCard(
+            controller: orderSearchController,
+             onTap: ()async{
+              await homeController.searchByOrderToken(orderSearchController.text);
+             },
+          ),
           CustomText(text: strService, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_19),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -73,7 +79,7 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomText(text: strRecentShip, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_19),
+              CustomText(text: 'Recent Orders', color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_19),
               CustomTextButton(
                 text: strViewAll,
                 color: AppColors.orange,
@@ -85,18 +91,18 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            height: 20,
-            width: 20,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(radius_10)),
-            child: Obx(() {
-              final List<AllOrdersModel> orders = homeController.ordersList;
-              return homeController.isLoading.isTrue
-                  ? const Center(
-                      child: CircularProgressIndicator(
+          Expanded(
+            child: FutureBuilder<List<AllOrdersModel>>(
+                future: homeController.fetchRecentOrders(),
+                builder: (BuildContext context, AsyncSnapshot<List<AllOrdersModel>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                        child: CircularProgressIndicator(
                       color: AppColors.orange,
-                    ))
-                  : ListView.builder(
+                    ));
+                  } else if (snapshot.hasData) {
+                    final List<AllOrdersModel> orders = homeController.ordersList;
+                    return ListView.builder(
                       itemCount: orders.length,
                       itemBuilder: (context, index) {
                         AllOrdersModel order = orders[index];
@@ -133,9 +139,7 @@ class HomeScreen extends StatelessWidget {
                                 Get.to(() => PendingDetailsScreen(
                                       orderToken: orderToken,
                                     ));
-                              } else if (status.toLowerCase() == 'delivery pending'){
-
-                              }
+                              } else if (status.toLowerCase() == 'delivery pending') {}
                             },
                             child: ShippingChip(
                               orderUidNo: orderToken,
@@ -151,7 +155,12 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                     );
-            }),
+                  } else {
+                    return const Center(
+                      child: Text('No Orders added recently'),
+                    );
+                  }
+                }),
           ),
         ],
       )),
