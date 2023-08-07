@@ -7,6 +7,7 @@ import 'package:courier_app/src/core/constants/custom_tiles.dart';
 import 'package:courier_app/src/core/constants/dimensions.dart';
 import 'package:courier_app/src/core/constants/palette.dart';
 import 'package:courier_app/src/core/constants/strings.dart';
+import 'package:courier_app/src/features/features/add_order/add_order1_screen.dart';
 import 'package:courier_app/src/features/features/all_item/all_item_screen.dart';
 import 'package:courier_app/src/features/features/all_item/all_orders_model.dart';
 import 'package:courier_app/src/features/features/home/home_controller.dart';
@@ -39,11 +40,11 @@ class HomeScreen extends StatelessWidget {
               image: AssetImage(ImgAssets.forgotArt),
               title: '${strHello} Mizan,',
               subtitle: strWelcomeBack),
-           CustomHeadCard(
+          CustomHeadCard(
             controller: orderSearchController,
-             onTap: ()async{
+            onTap: () async {
               await homeController.searchByOrderToken(orderSearchController.text);
-             },
+            },
           ),
           CustomText(text: strService, color1: AppColors.black, fontWeight: fontWeight600, fontSize: font_19),
           SingleChildScrollView(
@@ -54,23 +55,29 @@ class HomeScreen extends StatelessWidget {
                 CustomItems(
                   image: AssetImage(ImgAssets.boxDrop),
                   text: strAddDrop,
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(const AddOrderOneScreen());
+                  },
                 ),
                 CustomItems(
                   image: AssetImage(ImgAssets.boxPick),
                   text: strAddPick,
-                  onTap: () {},
+                  onTap: () {
+                    Get.to( AllItemScreen(selectedStatus: 'Pickup Pending'));
+                  },
                 ),
                 CustomItems(
-                  image: AssetImage(ImgAssets.boxPending),
+                  image: const AssetImage(ImgAssets.boxPending),
                   text: strDelPending,
-                  onTap: () {},
+                  onTap: () {
+                    Get.to( AllItemScreen(selectedStatus: 'Delivery Pending'));
+                  },
                 ),
                 CustomItems(
-                  image: AssetImage(ImgAssets.boxAllItem),
+                  image: const AssetImage(ImgAssets.boxAllItem),
                   text: strAllItem,
                   onTap: () {
-                    Get.to(AllItemScreen());
+                    Get.to( AllItemScreen(selectedStatus: 'All',));
                   },
                 ),
               ],
@@ -86,82 +93,82 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: fontWeight600,
                 font: font_15,
                 onPress: () {
-                  Get.to(const AllItemScreen());
+                  Get.to( AllItemScreen(selectedStatus: 'All',));
                 },
               ),
             ],
           ),
-          Expanded(
-            child: FutureBuilder<List<AllOrdersModel>>(
-                future: homeController.fetchRecentOrders(),
-                builder: (BuildContext context, AsyncSnapshot<List<AllOrdersModel>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                        child: CircularProgressIndicator(
-                      color: AppColors.orange,
-                    ));
-                  } else if (snapshot.hasData) {
-                    final List<AllOrdersModel> orders = homeController.ordersList;
-                    return ListView.builder(
-                      itemCount: orders.length,
-                      itemBuilder: (context, index) {
-                        AllOrdersModel order = orders[index];
-                        String orderToken = order.orderToken.toString();
-                        String senderName = order.senderName.toString();
-                        String receiverName = order.receiverName.toString();
-                        String productName = order.itemName.toString();
-                        String dateAndTime = order.date.toString();
-                        String status = order.status.toString();
-                        Color buttonColor;
-                        Color bgColor = AppColors.white;
-
-                        if (status.toLowerCase() == 'pickup pending') {
-                          buttonColor = AppColors.yellow;
-                        } else if (status.toLowerCase() == 'completed') {
-                          buttonColor = AppColors.orange;
-                        } else {
-                          buttonColor = AppColors.blue;
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: InkWell(
-                            onTap: () {
-                              if (status.toLowerCase() == 'completed') {
-                                Get.to(() => CompleteOrdersScreen(
-                                      orderToken: orderToken,
-                                    ));
-                              } else if (status.toLowerCase() == 'delivered') {
-                                Get.to(() => DeliveredOrdersScreen(
-                                      orderToken: orderToken,
-                                    ));
-                              } else if (status.toLowerCase() == 'pickup pending') {
-                                Get.to(() => PendingDetailsScreen(
-                                      orderToken: orderToken,
-                                    ));
-                              } else if (status.toLowerCase() == 'delivery pending') {}
-                            },
-                            child: ShippingChip(
-                              orderUidNo: orderToken,
-                              senderName: senderName,
-                              recieverName: receiverName,
-                              productName: productName,
-                              time: dateAndTime,
-                              buttonColor: buttonColor,
-                              buttonName: status,
-                              bgColor: bgColor,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text('No Orders added recently'),
-                    );
-                  }
-                }),
-          ),
+          // Expanded(
+          //   child: FutureBuilder<List<AllOrdersModel>>(
+          //       future: homeController.fetchRecentOrders(),
+          //       builder: (BuildContext context, AsyncSnapshot<List<AllOrdersModel>> snapshot) {
+          //         if (snapshot.connectionState == ConnectionState.waiting) {
+          //           return const Center(
+          //               child: CircularProgressIndicator(
+          //             color: AppColors.orange,
+          //           ));
+          //         } else if (snapshot.hasData) {
+          //           final List<AllOrdersModel> orders = homeController.ordersList;
+          //           return ListView.builder(
+          //             itemCount: orders.length,
+          //             itemBuilder: (context, index) {
+          //               AllOrdersModel order = orders[index];
+          //               String orderToken = order.orderToken.toString();
+          //               String senderName = order.senderName.toString();
+          //               String receiverName = order.receiverName.toString();
+          //               String productName = order.itemName.toString();
+          //               String dateAndTime = order.date.toString();
+          //               String status = order.status.toString();
+          //               Color buttonColor;
+          //               Color bgColor = AppColors.white;
+          //
+          //               if (status.toLowerCase() == 'pickup pending') {
+          //                 buttonColor = AppColors.yellow;
+          //               } else if (status.toLowerCase() == 'completed') {
+          //                 buttonColor = AppColors.orange;
+          //               } else {
+          //                 buttonColor = AppColors.blue;
+          //               }
+          //
+          //               return Padding(
+          //                 padding: const EdgeInsets.all(8),
+          //                 child: InkWell(
+          //                   onTap: () {
+          //                     if (status.toLowerCase() == 'completed') {
+          //                       Get.to(() => CompleteOrdersScreen(
+          //                             orderToken: orderToken,
+          //                           ));
+          //                     } else if (status.toLowerCase() == 'delivered') {
+          //                       Get.to(() => DeliveredOrdersScreen(
+          //                             orderToken: orderToken,
+          //                           ));
+          //                     } else if (status.toLowerCase() == 'pickup pending') {
+          //                       Get.to(() => PendingDetailsScreen(
+          //                             orderToken: orderToken,
+          //                           ));
+          //                     } else if (status.toLowerCase() == 'delivery pending') {}
+          //                   },
+          //                   child: ShippingChip(
+          //                     orderUidNo: orderToken,
+          //                     senderName: senderName,
+          //                     recieverName: receiverName,
+          //                     productName: productName,
+          //                     time: dateAndTime,
+          //                     buttonColor: buttonColor,
+          //                     buttonName: status,
+          //                     bgColor: bgColor,
+          //                   ),
+          //                 ),
+          //               );
+          //             },
+          //           );
+          //         } else {
+          //           return const Center(
+          //             child: Text('No Orders added recently'),
+          //           );
+          //         }
+          //       }),
+          // ),
         ],
       )),
     );

@@ -19,8 +19,9 @@ import '../item_details/complete_details.dart';
 
 class AllItemScreen extends StatefulWidget {
   final String selectedStatus;
+  late var initialIndex;
 
-  const AllItemScreen({Key? key, this.selectedStatus = 'All'}) : super(key: key);
+   AllItemScreen({Key? key, this.selectedStatus = 'All'}) : super(key: key);
 
   @override
   State<AllItemScreen> createState() => _AllItemScreenState();
@@ -30,7 +31,17 @@ class _AllItemScreenState extends State<AllItemScreen> {
   AllItemController allItemsController = Get.put(AllItemController());
   TextEditingController searchController = TextEditingController();
 
-
+  @override
+  void initState() {
+    allItemsController.selectedStatus = widget.selectedStatus;
+    widget.initialIndex = allItemsController.statuses.indexOf(widget.selectedStatus);
+    if(allItemsController.selectedStatus == 'All') {
+      allItemsController.fetchAllOrders();
+    }else{
+      allItemsController.fetchOrdersByStatus(widget.selectedStatus);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +57,8 @@ class _AllItemScreenState extends State<AllItemScreen> {
         padding: EdgeInsets.symmetric(horizontal: margin_10),
         children: [
           DefaultTabController(
-            length: 4,
+            length: 5,
+            initialIndex: widget.initialIndex,
             child: Column(
               children: <Widget>[
                 ButtonsTabBar(
@@ -88,6 +100,9 @@ class _AllItemScreenState extends State<AllItemScreen> {
                     ),
                     Tab(
                       text: strPickupPending,
+                    ),
+                    Tab(
+                      text: 'Delivery Pending',
                     ),
                   ],
                 ),
@@ -168,7 +183,7 @@ class _AllItemScreenState extends State<AllItemScreen> {
                   width: width_340,
                   child: TabBarView(
                     children: <Widget>[
-                      for (int i = 0; i < 4; i++)
+                      for (int i = 0; i < 5; i++)
                         Container(
                           height: 20,
                           width: 20,

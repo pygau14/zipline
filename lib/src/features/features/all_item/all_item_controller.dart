@@ -10,15 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AllItemController extends GetxController {
   @override
-  void onInit() {
-    super.onInit();
-    fetchAllOrders();
-  }
+  // void onInit() {
+  //   super.onInit();
+  //   fetchAllOrders();
+  // }
 
   final RxList<String> dropdownItems = RxList(['today', '7 Days', 'Custom Day', 'Clear Filter']);
   RxList<AllOrdersModel> searchedOrdersList = RxList<AllOrdersModel>([]);
 
-  final List<String> statuses = ['All', 'Completed', 'Delivered', 'Pickup Pending'];
+  final List<String> statuses = ['All', 'Completed', 'Delivered', 'Pickup Pending', 'Delivery Pending'];
   RxString searchQuery = RxString('');
 
   RxBool isLoading = false.obs;
