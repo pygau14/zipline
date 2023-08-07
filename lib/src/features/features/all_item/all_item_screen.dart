@@ -8,12 +8,9 @@ import 'package:courier_app/src/features/features/all_item/all_item_controller.d
 import 'package:courier_app/src/features/features/all_item/all_orders_model.dart';
 import 'package:courier_app/src/features/features/item_details/delivered%20_details.dart';
 import 'package:courier_app/src/features/features/item_details/pending_details_screen.dart';
-import 'package:custom_date_range_picker/custom_date_range_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
-
 import '../../../components/custom_appbar.dart';
 import '../../../components/custom_list.dart';
 import '../../../core/constants/dimensions.dart';
@@ -21,7 +18,9 @@ import '../../../core/constants/font_weight.dart';
 import '../item_details/complete_details.dart';
 
 class AllItemScreen extends StatefulWidget {
-  const AllItemScreen({Key? key}) : super(key: key);
+  final String selectedStatus;
+
+  const AllItemScreen({Key? key, this.selectedStatus = 'All'}) : super(key: key);
 
   @override
   State<AllItemScreen> createState() => _AllItemScreenState();
@@ -30,6 +29,8 @@ class AllItemScreen extends StatefulWidget {
 class _AllItemScreenState extends State<AllItemScreen> {
   AllItemController allItemsController = Get.put(AllItemController());
   TextEditingController searchController = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
