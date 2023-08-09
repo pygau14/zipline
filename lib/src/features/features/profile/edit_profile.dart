@@ -77,7 +77,7 @@ class EditProfileScreen extends GetView<ProfileController> {
                           child: Obx(
                             () => profileController.imagePath.value.isNotEmpty
                                 ? CircleAvatar(
-                                    backgroundImage: FileImage(File(updatedProfilePic)),
+                                    backgroundImage: FileImage(File(profileController.imagePath.value)),
                                     radius: radius_40,
                                     child: Align(
                                         alignment: Alignment.bottomRight,

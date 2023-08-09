@@ -131,7 +131,9 @@ class ProfileScreen extends StatelessWidget {
                             font: font_16,
                             onPress: () {
                               prefs.remove(UserContants.userId);
-                              Get.offAll(AppRoutes.login);
+                              prefs.remove(UserContants.userName);
+                              prefs.remove(UserContants.userProfilePhoto);
+                              Get.offAllNamed(AppRoutes.login);
                             })
                       ],
                     )

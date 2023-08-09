@@ -2,7 +2,11 @@ import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/core/constants/palette.dart';
 import 'package:courier_app/src/core/constants/user_constants.dart';
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
+import 'package:courier_app/src/features/auth/login/login_bindings.dart';
+import 'package:courier_app/src/features/auth/register/register_binding.dart';
 import 'package:courier_app/src/features/features/add_order/add_order_binding.dart';
+import 'package:courier_app/src/features/features/home/home_binding.dart';
+import 'package:courier_app/src/features/features/profile/profile_binding.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +64,7 @@ class MyApp extends StatelessWidget {
             initialRoute:
                 prefs.getInt(UserContants.userId) == null ? AppRoutes.getLoginRoute() : AppRoutes.getHomeRoute(),
             // !firstLogin ? AppRoutes.getLoginRoute() : AppRoutes.getIntroRoute(),
-            initialBinding: prefs.getInt(UserContants.userId) == null ? AddOrderBinding() : AddOrderBinding(),
+            initialBinding: prefs.getInt(UserContants.userId) == null ? LoginBinding() : HomeBinding(),
             // !firstLogin ? LoginBinding() : IntroBinding(),
             getPages: AppRoutes.getPages(),
             onGenerateRoute: (settings) => AppRoutes.generateRoute(settings),

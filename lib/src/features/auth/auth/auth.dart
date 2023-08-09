@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:courier_app/src/core/config/routes.dart';
 import 'package:courier_app/src/core/constants/user_constants.dart';
+import 'package:courier_app/src/features/auth/auth/login_user_model.dart';
 import 'package:courier_app/src/features/auth/auth/preferences_service.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,6 +129,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> loginUser(String email, String password) async {
+    LoginUserModel loginUserModel;
     isLoading.value = true;
     final url = Uri.parse('https://courier.hnktrecruitment.in/login');
 
@@ -143,8 +145,16 @@ class AuthController extends GetxController {
       var jsonData = jsonDecode(response.body.toString());
 
       if (response.statusCode == 200) {
-        int userId = jsonData[UserContants.userId];
+        loginUserModel = LoginUserModel.fromJson(jsonData);
+
+        int userId = loginUserModel.userId!;
+        String userName = loginUserModel.name!;
+        String userProfileUrl = loginUserModel.profilePhotoUrl!;
+
         await prefs.setInt(UserContants.userId, userId);
+        await prefs.setString(UserContants.userName, userName);
+        await prefs.setString(UserContants.userProfilePhoto, userProfileUrl);
+
         Fluttertoast.showToast(msg: "Login Successful");
         Get.offNamed(AppRoutes.home);
       } else {

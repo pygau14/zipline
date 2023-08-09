@@ -115,39 +115,38 @@ class RegisterScreen extends GetView<AuthController> {
                 height: height_15,
                 textInputType: TextInputType.text,
                 controller: passWordController,
-
-                obscure:true,
+                obscure: true,
                 validator: ValidationBuilder().required('Password is required').build(),
               ), //
-              Obx(() =>
-                  CustomTextField(
-                    labelText: strConfirmPass,
-                    prefixIcon: const Image(
-                      image: AssetImage(ImgAssets.passIcon),
+              Obx(
+                () => CustomTextField(
+                  labelText: strConfirmPass,
+                  prefixIcon: const Image(
+                    image: AssetImage(ImgAssets.passIcon),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Image(
+                      image: AssetImage(registerController.isPasswordVisible.value ? ImgAssets.eye : ImgAssets.eyeHide),
                     ),
-                    suffixIcon: IconButton(
-                      icon:Image(image: AssetImage(registerController.isPasswordVisible.value ?ImgAssets.eye : ImgAssets.eyeHide),
-                      ),
-                      onPressed: () {
-                        registerController.togglePasswordVisibility();
-                      },
-                    ),
-                    obscure: registerController.isPasswordVisible.value,
-                    height: height_15,
-                    textInputType: TextInputType.text,
-                    controller: confirmPassController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty  ) {
-                        return 'field is required';
-                      }
-                      if(value != passWordController.text){
-                        return 'Passwords do not match';
-                      }
-                      else {
-                        return null;
-                      }
+                    onPressed: () {
+                      registerController.togglePasswordVisibility();
                     },
-                  ), //
+                  ),
+                  obscure: registerController.isPasswordVisible.value,
+                  height: height_15,
+                  textInputType: TextInputType.text,
+                  controller: confirmPassController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'field is required';
+                    }
+                    if (value != passWordController.text) {
+                      return 'Passwords do not match';
+                    } else {
+                      return null;
+                    }
+                  },
+                ), //
               ),
 
               CustomTextField(
