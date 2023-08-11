@@ -61,6 +61,7 @@ dependencies:
   form_validator: ^2.1.1
   shared_preferences: ^2.2.0
   image_gallery_saver: ^2.0.3
+  intl_phone_field: ^3.2.0
 
 
 dev_dependencies:
